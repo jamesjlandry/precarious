@@ -13,8 +13,10 @@ import { Player } from "./Player";
 
 export class Game extends Resource {
   @include(Model)
+
+
   @hasMany
-  players;
+  players = []
 
   @string
   name = "";
@@ -32,15 +34,18 @@ export class Game extends Resource {
   buzzedInPlayerId
 
 
-    static async createGame(currentUser, name, rounds) {
+    static async createGame(currentUserId, name, rounds) {
         const newGame = await Game.create({
             name: name, 
             rounds: rounds, 
             isActive: true
         })
-        const judge = await Player.create({user_id: currentUser.id, isJudge: true, game_id: newGame.id})
+        const judge = await Player.create({user_id: currentUserId, isJudge: true, game_id: newGame.id})
         
-        return newGame
+        return ({ 
+            newGame,
+            judge
+        })
     }
 
     static async invitePlayers(currentGameId, userId) {
@@ -55,13 +60,20 @@ export class Game extends Resource {
     }
 
     static async buzzIn(currentGameId, userId) {
+
         let buzzedInPlayer = await Player.read(userId)
         let players = await Player.where({game_id: currentGameId})
 
-        console.log(players)
-        console.log(buzzedInPlayer)
+        players = players.map(player => player.buzzerIsEnabled = false)
+
+        return ({
+            buzzedInPlayer,
+            players
+        })
+
     }
 
+    
 
 
 
