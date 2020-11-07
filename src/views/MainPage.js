@@ -1,18 +1,26 @@
-import React from 'react'
-import { tether, Section, TextInput, List, Container, Heading, Button } from '@triframe/designer'
+import React from "react";
+import {
+  tether,
+  Section,
+  Container,
+  Heading,
+  Redirect,
+  Subheading,
+  Button,
+} from "@triframe/designer";
 
+export const MainPage = tether(function* ({ Api, redirect }) {
+  return (
+    <Container>
+      <Heading>PRECARIOUS!</Heading>
 
-export const MainPage = tether(function*({ Api }) {
-
-  
-
-    return (
-        <Container>
-           <Heading>What's Up Doc</Heading>
-           <Heading>What's Up Doc</Heading>
-           <Heading>What's Up Doc</Heading>
-           <Heading>What's Up Doc</Heading>
-           <Heading>What's Up Doc</Heading>
-        </Container>
-    )
-})  
+      <Subheading>Login or Create User</Subheading>
+      <Section>
+        <Button onClick={() => redirect("/login")}>Log In</Button>
+        <Button onClick={() => redirect("/create-user")}>
+          Register New User
+        </Button>
+      </Section>
+    </Container>
+  );
+});

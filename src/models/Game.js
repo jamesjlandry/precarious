@@ -1,25 +1,36 @@
-import { Resource } from '@triframe/core'
-import { include, Model, string, boolean, integer, hasMany } from '@triframe/scribe'
+import { Resource } from "@triframe/core";
+import {
+  belongsTo,
+  boolean,
+  hasMany,
+  include,
+  integer,
+  Model,
+  string,
+} from "@triframe/scribe";
+import { session, stream } from "@triframe/scribe/dist/decorators";
 
 export class Game extends Resource {
-    @include(Model)
+  @include(Model)
+  @hasMany
+  players;
 
-    @hasMany
-    players
+  @string
+  name = "";
 
-    @string
-    name = ''
+  @integer
+  rounds = 5;
 
-    @integer
-    rounds = 5
+  @string
+  question = "";
 
-    @string
-    question = ''
+  @boolean
+  isOpen = false;
 
     @boolean
     isActive = false
 
-    static async createGame(currentUser, name, rounds, isOpen) {
+    static async createGame(currentUser, name, rounds, isActive) {
         const newGame = await Game.create({
             name: name, 
             rounds: rounds, 
