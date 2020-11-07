@@ -19,12 +19,8 @@ export const ViewUser = tether(function* ({ Api, redirect }) {
       <Container>
         <Heading>Welcome, {user.username}!</Heading>
         <Section>
-          <Button onClick={() => console.log("creating game")}>
-            Create Game
-          </Button>
-          <Button onClick={() => console.log("now you can join a game")}>
-            Join A Game
-          </Button>
+          <Button onClick={() => redirect("/create-game")}>Create Game</Button>
+          <Button onClick={() => redirect("/join-game")}>Join A Game</Button>
         </Section>
       </Container>
     );
