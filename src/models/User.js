@@ -1,6 +1,6 @@
 import { Resource } from '@triframe/core'
 import { include, Model, string, hasMany } from '@triframe/scribe'
-import { session, stream } from '@triframe/scribe/dist/decorators'
+import { boolean, session, stream } from '@triframe/scribe/dist/decorators'
 import { hash, compare } from 'bcrypt'
 
 export class User extends Resource {
@@ -11,6 +11,9 @@ export class User extends Resource {
 
     @string
     passwordDigest = ""
+
+    @boolean
+    isAvailable = false
 
     @hasMany
     players
