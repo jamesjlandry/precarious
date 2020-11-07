@@ -1,6 +1,6 @@
 import { Resource } from '@triframe/core'
-import { include, Model, string, hasMany } from '@triframe/scribe'
-import { boolean, session, stream } from '@triframe/scribe/dist/decorators'
+import { include, Model, string, hasMany, boolean } from '@triframe/scribe'
+import { session, stream } from '@triframe/scribe/dist/decorators'
 import { hash, compare } from 'bcrypt'
 
 export class User extends Resource {

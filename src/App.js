@@ -4,6 +4,6 @@ import { MainPage } from './views/MainPage'
 
 export default () => (
     <Provider url={process.env.REACT_APP_BACKEND_URL}>
-        <Route path="/" component={MainPage} />
+        <Route exact path="/" component={MainPage} />
     </Provider>
 )
