@@ -28,6 +28,7 @@ export class User extends Resource {
     let passwordDigest = await hash(password, 11);
     return User.create({ username, passwordDigest });
   }
+
   @session
   static async login(session, username, password) {
     let [user] = await User.where({ username: username });
