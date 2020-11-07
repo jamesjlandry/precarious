@@ -9,6 +9,7 @@ import {
   string,
 } from "@triframe/scribe";
 import { session, stream } from "@triframe/scribe/dist/decorators";
+import { Player } from "./Player";
 
 export class Game extends Resource {
   @include(Model)
@@ -25,12 +26,13 @@ export class Game extends Resource {
   question = "";
 
   @boolean
-  isOpen = false;
+  isActive = false;
 
-    @boolean
-    isActive = false
+  @integer
+  buzzedInPlayerId
 
-    static async createGame(currentUser, name, rounds, isActive) {
+
+    static async createGame(currentUser, name, rounds) {
         const newGame = await Game.create({
             name: name, 
             rounds: rounds, 
@@ -41,16 +43,26 @@ export class Game extends Resource {
         return newGame
     }
 
-    static async invitePlayers(currentGameId, usernameId) {
+    static async invitePlayers(currentGameId, userId) {
 
         return Player.create({
             isJudge: false,
             score: 0,
             game_id: currentGameId,
-            user_id: usernameId
+            user_id: userId
         })
 
     }
+
+    static async buzzIn(currentGameId, userId) {
+        let buzzedInPlayer = await Player.read(userId)
+        let players = await Player.where({currentGameId})
+
+        console.log(players)
+        console.log(buzzedInPlayer)
+    }
+
+
 
 
 }
