@@ -12,7 +12,9 @@ export default () => (
     <Route exact path="/" component={MainPage} />
     <Route exact path="/login" component={LoginUser} />
     <Route exact path="/create-user" component={CreateUser} />
-    <Route exact path="/view-user" component={ViewUser} />
+    <Route exact path="/view-user/:id" component={ViewUser} />
+    {/* TODO: this should redirect, not just render a diffent component */}
+    <Route exact path="/view-user/" component={LoginUser} />
     <Route exact path="/create-game" component={CreateGame} />
     <Route exact path="/join-game" component={JoinGame} />
   </Provider>
