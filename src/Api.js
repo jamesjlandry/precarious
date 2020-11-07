@@ -1,8 +1,9 @@
-import { serve } from '@triframe/arbiter'
-import path from 'path'
+import { serve } from "@triframe/arbiter";
+import path from "path";
 
-serve(path.resolve(__dirname, './models'), {
-    session: {
-        loggedInUserId: null
-    }
-})
+serve(path.resolve(__dirname, "./models"), {
+  session: {
+    loggedInUserId: null,
+  },
+});
+
