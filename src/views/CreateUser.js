@@ -41,7 +41,7 @@ export const CreateUser = tether(function* ({ Api }) {
         >
           Create User
         </Button>
-        <HelperText type="error" visible={form.errMsg !== null}>
+        <HelperText type="error" visible={form.errorMsg !== null}>
           {form.errorMsg}
         </HelperText>
       </Section>

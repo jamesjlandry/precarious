@@ -3,6 +3,6 @@ import path from 'path'
 
 serve(path.resolve(__dirname, './models'), {
     session: {
-
+        loggedInUserId: null
     }
 })
