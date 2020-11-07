@@ -10,7 +10,11 @@ export class Player extends Resource {
     @belongsTo
     game
 
+    @boolean
+    buzzerIsEnabled = false
 
+    @boolean
+    isJudge = false
    
 
 }
