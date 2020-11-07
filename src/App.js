@@ -1,9 +1,9 @@
 import React from "react";
 import { Provider, Route } from "@triframe/designer";
-import { CreateUser } from "./views/CreateUser";
+import { CreateUser } from "./views/UserViews/CreateUser";
 import { MainPage } from "./views/MainPage";
-import { LoginUser } from "./views/LoginUser";
-import { ViewUser } from "./views/ViewUser";
+import { LoginUser } from "./views/UserViews/LoginUser";
+import { ViewUser } from "./views/UserViews/ViewUser";
 
 export default () => (
   <Provider url={process.env.REACT_APP_BACKEND_URL}>
