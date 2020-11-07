@@ -1,0 +1,12 @@
+{
+  "name": "Precarious",
+  "displayName": "Precarious",
+  "expo": {
+    "name": "Precarious",
+    "slug": "Precarious",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
