@@ -56,7 +56,7 @@ export class Game extends Resource {
 
     static async buzzIn(currentGameId, userId) {
         let buzzedInPlayer = await Player.read(userId)
-        let players = await Player.where({currentGameId})
+        let players = await Player.where({game_id: currentGameId})
 
         console.log(players)
         console.log(buzzedInPlayer)
