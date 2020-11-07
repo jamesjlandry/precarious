@@ -34,6 +34,7 @@ export const CreateUser = tether(function* ({ Api }) {
           onPress={async () => {
             try {
               await User.register(form.username, form.password);
+              redirect("/view-user");
             } catch (error) {
               form.errorMsg = error.message;
             }
