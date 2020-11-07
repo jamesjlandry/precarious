@@ -2,47 +2,24 @@ import React from "react";
 import {
   tether,
   Section,
-  TextInput,
-  List,
   Container,
   Heading,
+  Redirect,
+  Subheading,
   Button,
 } from "@triframe/designer";
 
-export const MainPage = tether(function* ({ Api }) {
-  const { Message } = Api;
-
-  const messages = yield Message.list();
-
-  const form = yield { content: "" };
-
-  const handleSubmit = async () => {
-    await Message.create({ content: form.content });
-    form.content = "";
-  };
-
+export const MainPage = tether(function* ({ Api, redirect }) {
   return (
     <Container>
-      <Heading>Eddie's Message List</Heading>
+      <Heading>PRECARIOUS!</Heading>
+
+      <Subheading>Login or Create User</Subheading>
       <Section>
-        {messages.map((message) => (
-          <List.Item
-            key={message.id}
-            title={message.content}
-            right={() => (
-              <Button onPress={() => message.delete()}>Delete</Button>
-            )}
-          />
-        ))}
-      </Section>
-      <Heading>Create Message</Heading>
-      <Section>
-        <TextInput
-          label="Name"
-          value={form.content}
-          onChange={(value) => (form.content = value)}
-        />
-        <Button onPress={handleSubmit}>Create</Button>
+        <Button onClick={() => redirect("/login")}>Log In</Button>
+        <Button onClick={() => redirect("/create-user")}>
+          Register New User
+        </Button>
       </Section>
     </Container>
   );
