@@ -1,11 +1,16 @@
 import React from "react";
-import { Container, Heading, tether } from "@triframe/designer";
+import {
+  Button,
+  Container,
+  Heading,
+  Section,
+  tether,
+} from "@triframe/designer";
 
 export const ViewUser = tether(function* ({ Api, redirect }) {
   const { User } = Api;
 
   const user = yield User.current();
-  console.log("current user:", user);
 
   if (user === null) {
     redirect("/login");
@@ -13,6 +18,10 @@ export const ViewUser = tether(function* ({ Api, redirect }) {
     return (
       <Container>
         <Heading>Welcome, {user.username}!</Heading>
+        <Section>
+          <Button onClick={() => redirect("/create-game")}>Create Game</Button>
+          <Button onClick={() => redirect("/join-game")}>Join A Game</Button>
+        </Section>
       </Container>
     );
   }
