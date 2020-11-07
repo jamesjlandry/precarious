@@ -15,12 +15,15 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
   // need to figure out how to find a game the user is associated with
   let [game] = yield Game.where({ id: 0 });
 
+  if (user === null) {
+    redirect("/login");
+  }
   if (game === undefined) {
     return (
       <Container>
         <Section>
           <Heading>Waiting for an invitation</Heading>
-          <Subheading>Patience is a virtue</Subheading>
+          <Subheading>Patience is a virtue, {user?.username}</Subheading>
         </Section>
       </Container>
     );

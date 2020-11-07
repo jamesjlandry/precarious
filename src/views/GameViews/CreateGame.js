@@ -8,12 +8,11 @@ import {
   Subheading,
   Button,
 } from "@triframe/designer";
-import { List } from "@triframe/core/dist/List";
 
 export const CreateGame = tether(function* ({ Api, redirect }) {
   const { User } = Api;
   const form = yield { name: "", rounds: 5, players: [] };
-  const availablePlayers = yield User.where({ isAvailable: true });
+  const currentUser = yield User.current();
 
   return (
     <Container>
@@ -31,11 +30,18 @@ export const CreateGame = tether(function* ({ Api, redirect }) {
           value={form.rounds}
           onChange={(value) => (form.rounds = value)}
         />
-        <Subheading>Who do you want to play with?</Subheading>
-        {availablePlayers.map((player) => (
-          <List.Item title={player.username} />
-        ))}
-        <Button onPress={async () => {}}>Make The Game!</Button>
+        <Button
+          onPress={async () => {
+            const game = await Game.createGame(
+              currentUser,
+              form.name,
+              form.rounds
+            );
+            redirect(`/setup-game/${game.id}`);
+          }}
+        >
+          Make The Game!
+        </Button>
       </Section>
     </Container>
   );

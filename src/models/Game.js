@@ -1,5 +1,6 @@
 import { Resource } from "@triframe/core";
 import {
+  array,
   belongsTo,
   boolean,
   hasMany,
@@ -14,7 +15,7 @@ import { Player } from "./Player";
 export class Game extends Resource {
   @include(Model)
   @hasMany
-  players;
+  players = [];
 
   @string
   name = "";
@@ -29,40 +30,37 @@ export class Game extends Resource {
   isActive = false;
 
   @integer
-  buzzedInPlayerId
+  buzzedInPlayerId;
 
+  static async createGame(currentUser, name, rounds) {
+    const newGame = await Game.create({
+      name: name,
+      rounds: rounds,
+      isActive: true,
+    });
+    const judge = await Player.create({
+      user_id: currentUser.id,
+      isJudge: true,
+      game_id: newGame.id,
+    });
 
-    static async createGame(currentUser, name, rounds) {
-        const newGame = await Game.create({
-            name: name, 
-            rounds: rounds, 
-            isActive: true
-        })
-        const judge = await Player.create({user_id: currentUser.id, isJudge: true, game_id: newGame.id})
-        
-        return newGame
-    }
+    return newGame;
+  }
 
-    static async invitePlayers(currentGameId, userId) {
+  static async invitePlayers(currentGameId, userId) {
+    return Player.create({
+      isJudge: false,
+      score: 0,
+      game_id: currentGameId,
+      user_id: userId,
+    });
+  }
 
-        return Player.create({
-            isJudge: false,
-            score: 0,
-            game_id: currentGameId,
-            user_id: userId
-        })
+  static async buzzIn(currentGameId, userId) {
+    let buzzedInPlayer = await Player.read(userId);
+    let players = await Player.where({ game_id: currentGameId });
 
-    }
-
-    static async buzzIn(currentGameId, userId) {
-        let buzzedInPlayer = await Player.read(userId)
-        let players = await Player.where({game_id: currentGameId})
-
-        console.log(players)
-        console.log(buzzedInPlayer)
-    }
-
-
-
-
+    console.log(players);
+    console.log(buzzedInPlayer);
+  }
 }

@@ -43,7 +43,7 @@ export class User extends Resource {
       );
     }
     session.loggedInUserId = user.id;
-    return true;
+    return user;
   }
 
   @session
