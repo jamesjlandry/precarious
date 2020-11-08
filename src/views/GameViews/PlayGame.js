@@ -55,7 +55,7 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
         <Area alignY="bottom">
         {currentPlayer.isJudge ? <Card>
           <Area>
-          {players.map(player => <Section><Card>{player.user.username}</Card></Section>)}
+          {players.map(player => <Section><Card style={currentGame.buzzedInPlayerId ? {color: "green"} : {color: "grey"}}>{player.user.username}</Card></Section>)}
           </Area>
           <Section>
             
@@ -65,7 +65,7 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
                 value={form.points}
                 onChange={value => form.points = value}
               />
-              <Button disabled={buzzedInPlayer === null} onPress={() => Game.assignPoints(currentGame.buzzedInPlayer, form.points, id)}>
+              <Button disabled={currentGame.buzzedInPlayerId === null} onPress={() => Game.assignPoints(currentGame.buzzedInPlayerId, form.points, id)}>
                 Make it So
               </Button>
             </Section>
