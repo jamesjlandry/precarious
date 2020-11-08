@@ -25,7 +25,7 @@ export class Game extends Resource {
   currentRound = 0;
 
   @integer
-  buzzedInPlayerId = null
+  buzzedInPlayerId = null;
 
   @string
   question = "";
@@ -33,49 +33,58 @@ export class Game extends Resource {
   @boolean
   isActive = false;
 
-  @hasMany({ through: (game) => game.players.user})
+  @hasMany({ through: (game) => game.players.user })
   users;
 
-    static async createGame(currentUserId, name, rounds) {
-        const newGame = await Game.create({
-            name: name, 
-            rounds: rounds, 
-            isActive: true,
-            currentRound: 0
-        })
-        const judge = await Player.create({userId: currentUserId, isJudge: true, gameId: newGame.id})
-        console.log("createGame: ng/judge", newGame, "/", judge)
-        return ({ 
-            newGame,
-            judge
-        })
-    }
+  static async createGame(currentUserId, name, rounds) {
+    const newGame = await Game.create({
+      name: name,
+      rounds: rounds,
+      isActive: true,
+      currentRound: 0,
+    });
+    const judge = await Player.create({
+      userId: currentUserId,
+      isJudge: true,
+      gameId: newGame.id,
+    });
 
-    static async invitePlayers(currentGameId, userId) {
+    return Game.read(
+      newGame.id,
+      `
+            *,
+            players {
+                *
+            }
+            `,
+      judge
+    );
+  }
 
-        const player = await Player.create({
-            isJudge: false,
-            score: 0,
-            gameId: currentGameId,
-            userId: userId
-        })
+  static async invitePlayers(currentGameId, userId) {
+    const player = await Player.create({
+      isJudge: false,
+      score: 0,
+      gameId: currentGameId,
+      userId: userId,
+    });
 
-        let selectedPlayer = await User.read(userId)
+    let selectedPlayer = await User.read(userId);
 
-        selectedPlayer.isAvailable = false
+    selectedPlayer.isAvailable = false;
 
-        return(
-            Player.read(player.id, `
+    return Player.read(
+      player.id,
+      `
                 *, 
                 game {
                     *
                 }
-            `)
-        )
-
-    }
-    // enableBuzzer method available to player with isJudge set to true.
-    // enableBuzzer can be used after a wrong answer, or after points are scored.
+            `
+    );
+  }
+  // enableBuzzer method available to player with isJudge set to true.
+  // enableBuzzer can be used after a wrong answer, or after points are scored.
   static async enableBuzzer(currentUser, currentGameId) {
     const players = await Player.where({ game_id: currentGameId });
     if (currentUser.isJudge === true) {
@@ -83,20 +92,19 @@ export class Game extends Resource {
     }
     return players;
   }
-        // assignPoints method available to player with isJudge set to true.
-    static async assignPoints(pointWinnerId, points, currentGameId) {
-        const pointWinner = await Player.read(pointWinnerId)
-        pointWinner.score = pointWinner.score + points
-        const currentGame = Game.read(currentGameId)
-        currentGame.currentRound ++
-        return pointWinner
-    }
+  // assignPoints method available to player with isJudge set to true.
+  static async assignPoints(pointWinnerId, points, currentGameId) {
+    const pointWinner = await Player.read(pointWinnerId);
+    pointWinner.score = pointWinner.score + points;
+    const currentGame = Game.read(currentGameId);
+    currentGame.currentRound++;
+    return pointWinner;
+  }
 
-    // frontend method should check for if currentGame.currentRound > currentGame.rounds and 
-    // run declareWinner on that condition. 
+  // frontend method should check for if currentGame.currentRound > currentGame.rounds and
+  // run declareWinner on that condition.
   static async declareWinner(currentGameId) {
-        let game = await Game.read(currentGameId);
-        return game.players.sort((a, b) => a.score - b.score);
-    }
-
+    let game = await Game.read(currentGameId);
+    return game.players.sort((a, b) => a.score - b.score);
+  }
 }
