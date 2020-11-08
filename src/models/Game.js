@@ -7,8 +7,16 @@ import {
   Model,
   string,
 } from "@triframe/scribe";
+import fetch from "node-fetch";
 import { Player } from "./Player";
 import { User } from "./User";
+
+const hereComesTheJudge = ({ session, resource }) => {
+  let [judge] = resource.players.where({ isJudge: true });
+  return session.loggedInUserId === judge.id;
+};
+
+const triviaApiEndpoint = `https://opentdb.com/api.php?amount=3`;
 
 export class Game extends Resource {
   @include(Model)
@@ -35,6 +43,12 @@ export class Game extends Resource {
 
   @hasMany({ through: (game) => game.players.user })
   users;
+
+  async getQuestions() {
+    let response = await fetch(triviaApiEndpoint);
+    let questions = await response.json();
+    console.log(questions);
+  }
 
   async getJudge() {
     const players = await Player.where({ gameId: this.id });
@@ -99,9 +113,9 @@ export class Game extends Resource {
   }
 
   static async dissableBuzzer(currentGameId) {
-      const players = await Player.where({ gameId: currentGameId});
-      players = players.map((player) => (player.buzzerIsEnabled = true));
-      return players
+    const players = await Player.where({ gameId: currentGameId });
+    players = players.map((player) => (player.buzzerIsEnabled = true));
+    return players;
   }
 
   // assignPoints method available to player with isJudge set to true.
@@ -115,8 +129,7 @@ export class Game extends Resource {
 
   // frontend method should check for if currentGame.currentRound > currentGame.rounds and
   // run declareWinner on that condition.
-    async declareWinner() {
-   
+  async declareWinner() {
     return this.players.sort((a, b) => a.score - b.score);
   }
 }
