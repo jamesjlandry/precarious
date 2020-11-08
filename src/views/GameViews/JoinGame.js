@@ -1,4 +1,6 @@
 import {
+  Area,
+  Button,
   Container,
   Heading,
   Section,
@@ -11,32 +13,62 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
   const { User, Game, Player } = Api;
 
   let user = yield User.current();
-
-  // need to figure out how to find a game the user is associated with
-  let [game] = yield Game.where({ id: 0 });
-
   if (user === null) {
     redirect("/login");
   }
-  if (game === undefined) {
+
+  let userPlayers = yield Player.where({ userId: user.id });
+  let playerGameIds = yield userPlayers.map((player) => player.gameId);
+  let activeGames = yield Game.where({ isActive: true });
+  let [activePlayerGame] = yield activeGames.filter((ag) =>
+    playerGameIds.includes(ag.id)
+  );
+
+  const declineInvite = async (userId, gameId) => {
+    const userPlayers = await Player.where({ userId });
+    let userGamePlayers = userPlayers.filter((up) => up.gameId === gameId);
+    userGamePlayers.forEach((ugp) => ugp.delete());
+  };
+
+  if (activePlayerGame !== undefined) {
+    let gamePlayers = yield Player.where({ gameId: activePlayerGame.id });
+    let [judgePlayer] = yield gamePlayers.filter((p) => p.isJudge);
+    let judge = yield User.read(judgePlayer.userId);
+
     return (
       <Container>
         <Section>
-          <Heading>Waiting for an invitation</Heading>
-          <Subheading>Patience is a virtue, {user?.username}</Subheading>
+          <Heading>
+            You're invited to {activePlayerGame.name ?? "a new game"}!
+          </Heading>
+          <Subheading>
+            {`${judge?.username} will be judge for this game.`}
+          </Subheading>
         </Section>
+        <Section>
+          <Button
+            onClick={() => {
+              user.isAvailable = false;
+              declineInvite(user.id, activePlayerGame.id);
+              redirect(`/view-user/${user.id}`);
+            }}
+          >
+            Decline
+          </Button>
+        </Section>
+        <Area alignX="center">
+          <Subheading>
+            or wait for {judge?.username} to start the game
+          </Subheading>
+        </Area>
       </Container>
     );
   } else {
     return (
       <Container>
         <Section>
-          <Heading>
-            You're invited to {game?.name ? game.name : "a new game"}!
-          </Heading>
-          <Subheading>
-            This is where information about the judge will go
-          </Subheading>
+          <Heading>Waiting for an invitation</Heading>
+          <Subheading>Patience is a virtue, {user?.username}</Subheading>
         </Section>
       </Container>
     );
