@@ -1,7 +1,13 @@
 import { Resource } from "@triframe/core";
 import { boolean, hasMany, include, Model, string } from "@triframe/scribe";
-import { session, stream } from "@triframe/scribe/dist/decorators";
+import {
+  hiddenUnless,
+  session,
+  stream,
+} from "@triframe/scribe/dist/decorators";
 import { hash, compare } from "bcrypt";
+
+const thisIsMe = (session, resource) => session.loggedInUserId === resource.id;
 
 export class User extends Resource {
   @include(Model)
@@ -19,6 +25,9 @@ export class User extends Resource {
 
   @hasMany({ through: (user) => user.players.game })
   games;
+
+  @hiddenUnless(thisIsMe)
+  delete;
 
   @session
   static async register(session, username, password) {
