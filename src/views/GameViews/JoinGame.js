@@ -18,21 +18,26 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
   }
 
   let userPlayers = yield Player.where({ userId: user.id });
-  let playerGameIds = yield userPlayers.map((player) => player.gameId);
+  let playerGameIds = userPlayers.map((player) => player.gameId);
   let activeGames = yield Game.where({ isActive: true });
-  let [activePlayerGame] = yield activeGames.filter((ag) =>
+  let [activePlayerGame] = activeGames.filter((ag) =>
     playerGameIds.includes(ag.id)
   );
+  
+
+  
 
   const declineInvite = async (userId, gameId) => {
     const userPlayers = await Player.where({ userId });
     let userGamePlayers = userPlayers.filter((up) => up.gameId === gameId);
     userGamePlayers.forEach((ugp) => ugp.delete());
   };
-
+  if (activePlayerGame !== undefined && activePlayerGame.currentRound === 1) {
+    return redirect(`/play/${activePlayerGame.id}`)
+  }
   if (activePlayerGame !== undefined) {
     let gamePlayers = yield Player.where({ gameId: activePlayerGame.id });
-    let [judgePlayer] = yield gamePlayers.filter((p) => p.isJudge);
+    let [judgePlayer] = gamePlayers.filter((p) => p.isJudge);
     let judge = yield User.read(judgePlayer.userId);
 
     return (
@@ -47,7 +52,7 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
         </Section>
         <Section>
           <Button
-            onClick={() => {
+            onPress={() => {
               user.isAvailable = false;
               declineInvite(user.id, activePlayerGame.id);
               redirect(`/view-user/${user.id}`);
@@ -70,7 +75,16 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
           <Heading>Waiting for an invitation</Heading>
           <Subheading>Patience is a virtue, {user?.username}</Subheading>
         </Section>
+        <Button
+          onPress={() => {
+            user.isAvailable = false;
+            redirect(`/view-user/${user?.id}`);
+          }}
+        >
+          I'm not that patient.
+        </Button>
       </Container>
     );
   }
+  
 });

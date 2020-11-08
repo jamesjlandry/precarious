@@ -7,9 +7,10 @@ import { ViewUser } from "./views/UserViews/ViewUser";
 import { CreateGame } from "./views/GameViews/CreateGame";
 import { JoinGame } from "./views/GameViews/JoinGame";
 import { SetupGame } from "./views/GameViews/SetupGame";
-import { AllUsers } from "./views/UserViews/AllUsers";
 import { PlayGame } from "./views/GameViews/PlayGame";
-
+import { GameOver } from "./views/GameViews/GameOver"
+import { AllUsers } from "./views/UserViews/AllUsers";
+import { AllGames } from "./views/GameViews/AllGames";
 
 export default () => (
   <Provider url="http://localhost:8080">
@@ -22,5 +23,7 @@ export default () => (
     <Route exact path="/join-game" component={JoinGame} />
     <Route exact path="/setup-game/:id" component={SetupGame} />
     <Route exact path="/play/:id" component={PlayGame} />
+    <Route exact path="/game-over/:id" component={GameOver} />
+    <Route exact path="/all-games" component={AllGames} />
   </Provider>
 );

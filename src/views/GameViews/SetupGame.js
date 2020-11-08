@@ -15,11 +15,18 @@ import React from "react";
 export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
   const { id } = yield useParams();
   const { Game, User, Player } = Api;
-  const game = yield Game.read(id);
-  const availableUsers = yield User.where({ isAvailable: true });
 
+  const game = yield Game.read(id);
+  const isActive = game.isActive;
+
+  const currentUser = yield User.current();
+  const availableUsers = yield User.where({ isAvailable: true });
+  if (!isActive) {
+    redirect(`/view-user/${currentUser.id}`);
+  }
+
+  const notEnoughPlayers = players?.length < 3;
   const players = yield Player.where({ gameId: id });
-  const notEnoughPlayers = yield players.length < 3;
 
   return (
     <Container>
@@ -43,7 +50,18 @@ export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
             ><Icon name="plus"></Icon></BubbleButton>
             </Area>}
       </Section>
+<<<<<<< HEAD
       <Button disabled={notEnoughPlayers} onClick={()=>redirect(`/play/${game.id}`)}>START!</Button>
+=======
+      <Button
+        disabled={notEnoughPlayers}
+        onPress={() => {
+          (game.currentRound = 1), redirect(`/play/${game.id}`);
+        }}
+      >
+        START!
+      </Button>
+>>>>>>> a2d62761bcddcf95e3fb58614de9b52778360cab
     </Container>
   );
 });

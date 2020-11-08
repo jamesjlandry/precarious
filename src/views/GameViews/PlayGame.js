@@ -13,11 +13,16 @@ import {
 
 
 export const PlayGame = tether(function* ({ Api, redirect }) {
+<<<<<<< HEAD
     const api = Api;
     console.log(api)
   const {Player, Game} = Api;  
              
  
+=======
+  const { Game, Player } = Api;
+
+>>>>>>> a2d62761bcddcf95e3fb58614de9b52778360cab
  
   const cardStyle = {padding: '10px', borderStyle:'solid', borderRadius:'15px', backgroundColor:"rgb(245,245,245)"}
   const buttonStyle = {
