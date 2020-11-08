@@ -15,8 +15,6 @@ import { User } from "./User";
 
 export class Game extends Resource {
   @include(Model)
-
-
   @hasMany
   players = [];
 
@@ -37,8 +35,6 @@ export class Game extends Resource {
 
   @boolean
   isActive = false;
-
-
 
     static async createGame(currentUserId, name, rounds) {
         const newGame = await Game.create({
@@ -77,18 +73,17 @@ export class Game extends Resource {
             `)
         )
 
+    let currentUser = await User.read(userId);
 
     }
 
-   
-
-    static async enableBuzzer(currentUser, currentGameId) {
-        const players = await Player.where({game_id: currentGameId})
-        if(currentUser.isJudge === true) {
-            players = players.map(player => player.buzzerIsEnabled = true)
-        }
-        return players
+  static async enableBuzzer(currentUser, currentGameId) {
+    const players = await Player.where({ game_id: currentGameId });
+    if (currentUser.isJudge === true) {
+      players = players.map((player) => (player.buzzerIsEnabled = true));
     }
+    return players;
+  }
 
     static async assignPoints(pointWinnerId, points, currentGameId) {
         const pointWinner = await Player.read(pointWinnerId)
@@ -98,13 +93,10 @@ export class Game extends Resource {
         return pointWinner
     }
 
-    static async declareWinner(currentRound, currentGameId) {
-        let game = await Game.read(currentGameId)
-        if(currentRound > game.rounds) {
-           return game.players.sort((a, b) => a.score - b.score)
-        }
+  static async declareWinner(currentRound, currentGameId) {
+    let game = await Game.read(currentGameId);
+    if (currentRound > game.rounds) {
+      return game.players.sort((a, b) => a.score - b.score);
     }
-
-
 
 }

@@ -1,4 +1,12 @@
-import { Container, Heading, List, Section, tether } from "@triframe/designer";
+import {
+  Area,
+  BubbleButton,
+  Container,
+  Heading,
+  List,
+  Section,
+  tether,
+} from "@triframe/designer";
 import React from "react";
 
 export const SetupGame = tether(function* ({ Api, useParams }) {
@@ -12,9 +20,17 @@ export const SetupGame = tether(function* ({ Api, useParams }) {
       <Heading>
         Select players for {game.name == "" || null ? "your game" : game.name}
       </Heading>
-      <Section>
+      <Section width="50%">
         {availableUsers.map((user) => (
-          <List.Item title={user.username} />
+          <Area inline key={user.id}>
+            <BubbleButton
+              icon="plus"
+              onPress={() => Game.invitePlayers(id, user.id)}
+            />
+            <Area alignY="center">
+              <List.Item title={user.username} />
+            </Area>
+          </Area>
         ))}
       </Section>
     </Container>
