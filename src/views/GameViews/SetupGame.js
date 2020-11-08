@@ -10,9 +10,10 @@ import {
 } from "@triframe/designer";
 import React from "react";
 
-export const SetupGame = tether(function* ({ Api, useParams }) {
+export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
   const { id } = yield useParams();
   const { Game, User, Player } = Api;
+  const currentUser = yield User.current();
   const game = yield Game.read(id);
   const availableUsers = yield User.where({ isAvailable: true });
 
@@ -38,6 +39,14 @@ export const SetupGame = tether(function* ({ Api, useParams }) {
         ))}
       </Section>
       <Button disabled={notEnoughPlayers}>START!</Button>
+      <Button
+        onPress={() => {
+          game.isActive = false;
+          redirect(`/view-user/${currentUser.id}`);
+        }}
+      >
+        No, nevermind
+      </Button>
     </Container>
   );
 });
