@@ -4,7 +4,8 @@
     "start": "triframe start"
   },
   "dependencies": {
-    "@triframe/arbiter": "^0.5.0",
+    "@triframe/arbiter": "^0.5.1",
+    "@triframe/arbiter-react": "^0.4.5",
     "@triframe/core": "^0.2.4",
     "@triframe/scribe": "^0.2.7",
     "bcrypt": "^5.0.0",
@@ -25,7 +26,7 @@
     "@babel/cli": "^7.12.1",
     "@babel/core": "~7.9.0",
     "@triframe/confectioner": "0.0.3",
-    "@triframe/designer": "^0.5.9",
+    "@triframe/designer": "^0.6.1",
     "@triframe/mason": "^0.2.3",
     "babel-jest": "~25.2.6",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
