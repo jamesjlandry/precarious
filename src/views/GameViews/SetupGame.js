@@ -25,8 +25,14 @@ export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
     redirect(`/view-user/${currentUser.id}`);
   }
 
-  const notEnoughPlayers = players?.length < 3;
   const players = yield Player.where({ gameId: id });
+  const notEnoughPlayers = players?.length < 3;
+  
+  console.log(players)
+
+  console.log(availableUsers)
+
+  console.log(currentUser)
 
   return (
     <Container>
@@ -44,15 +50,11 @@ export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
               <List.Item title={user.username} />
             </Area>
           </Area>
-        )): <Area>no users available
-         <BubbleButton
-              onPress={() => Game.invitePlayers(id, user.id)}
-            ><Icon name="plus"></Icon></BubbleButton>
-            </Area>}
+        )): 
+        <Area>Waiting for available players...
+         
+        </Area> }
       </Section>
-<<<<<<< HEAD
-      <Button disabled={notEnoughPlayers} onClick={()=>redirect(`/play/${game.id}`)}>START!</Button>
-=======
       <Button
         disabled={notEnoughPlayers}
         onPress={() => {
@@ -61,7 +63,6 @@ export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
       >
         START!
       </Button>
->>>>>>> a2d62761bcddcf95e3fb58614de9b52778360cab
     </Container>
   );
 });
