@@ -95,6 +95,7 @@ export class Game extends Resource {
   static async dissableBuzzer(currentGameId) {
       const players = await Player.where({ gameId: currentGameId});
       players = players.map((player) => (player.buzzerIsEnabled = true));
+      return players
   }
 
   // assignPoints method available to player with isJudge set to true.
