@@ -15,8 +15,6 @@ import {
 export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
   const { Game, Player } = Api;
   const { id } = yield useParams()
-  console.log(Api)
-
  
   const cardStyle = {padding: '10px', borderStyle:'solid', borderRadius:'15px', backgroundColor:"rgb(245,245,245)"}
   const buttonStyle = {
@@ -29,6 +27,8 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
   const currentPlayer = yield Player.current();      
                     
   const answering = false;
+  const players = yield Player.where({gameId: id, isJudge: false}, `*, user { * }`)
+  
 
   return (
     <Container>
@@ -48,7 +48,19 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
             </Card>
         </Area>
         <Area alignY="bottom">
-        {currentPlayer.isJudge ? <Card>judgemental stuff</Card> : <Card style={cardStyle}>
+        {currentPlayer.isJudge ? <Card>
+          <Area>
+          {players.map(player => <Section><Card>{player.user.username}</Card></Section>)}
+          </Area>
+          
+          
+          
+          
+          </Card> 
+        
+        
+        
+        : <Card style={cardStyle}>
             <Heading><b>Player Window</b></Heading>
                 <Button disabled={!currentPlayer.buzzerIsEnabled} style={currentPlayer.buzzerIsEnabled ? buttonStyle.buzzer : buttonStyle.inactiveBuzzer} onPress={()=> {
                     console.log("buzz in! currentPlay:id", currentPlayer.user.username, ":", id)

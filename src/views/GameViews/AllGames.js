@@ -24,7 +24,7 @@ export const AllGames = tether(function* ({ Api, redirect }) {
           // how do I use an async inside a React map?
           //   const judge = yield game.getJudge();
           return (
-            <Area inline>
+            <Area key={game.id} inline>
               <BubbleButton
                 icon="link"
                 onPress={() => redirect(`/setup-game/${game.id}`)}

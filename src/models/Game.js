@@ -2,13 +2,28 @@ import { Resource } from "@triframe/core";
 import {
   boolean,
   hasMany,
+  hidden,
+  hiddenUnless,
   include,
   integer,
   Model,
   string,
 } from "@triframe/scribe";
+import fetch from "node-fetch";
 import { Player } from "./Player";
 import { User } from "./User";
+
+const hereComesTheJudge = ({ session, resource }) => {
+  let [judge] = resource.players.where({ isJudge: true });
+  return session.loggedInUserId === judge.id;
+};
+
+const triviaApiEndpoint = (amount, difficulty, category) => {
+  return `https://opentdb.com/api.php?amount=${amount ?? 3}&difficulty=${
+    difficulty ?? ""
+  }&category=${category ?? ""}`;
+};
+const triviaCategoriesApiEndpoint = "https://opentdb.com/api_category.php";
 
 export class Game extends Resource {
   @include(Model)
@@ -35,6 +50,32 @@ export class Game extends Resource {
 
   @hasMany({ through: (game) => game.players.user })
   users;
+
+  @hidden
+  delete;
+
+  async getQuestions(numberOfQuestions, difficulty, category) {
+    let response = await fetch(
+      triviaApiEndpoint(numberOfQuestions, difficulty, category)
+    );
+    let questions = await response.json();
+    if (questions.results !== null && questions.results.length > 0) {
+      return questions.results;
+    }
+    return null;
+  }
+
+  static async getQuestionCategories() {
+    let response = await fetch(triviaCategoriesApiEndpoint);
+    let categories = await response.json();
+    if (
+      categories.trivia_categories !== null &&
+      categories.trivia_questions.length > 0
+    ) {
+      return categories.trivia_questions;
+    }
+    return null;
+  }
 
   async getJudge() {
     const players = await Player.where({ gameId: this.id });
@@ -99,9 +140,9 @@ export class Game extends Resource {
   }
 
   static async dissableBuzzer(currentGameId) {
-      const players = await Player.where({ gameId: currentGameId});
-      players = players.map((player) => (player.buzzerIsEnabled = true));
-      return players
+    const players = await Player.where({ gameId: currentGameId });
+    players = players.map((player) => (player.buzzerIsEnabled = true));
+    return players;
   }
 
   // assignPoints method available to player with isJudge set to true.
@@ -115,8 +156,7 @@ export class Game extends Resource {
 
   // frontend method should check for if currentGame.currentRound > currentGame.rounds and
   // run declareWinner on that condition.
-    async declareWinner() {
-   
+  async declareWinner() {
     return this.players.sort((a, b) => a.score - b.score);
   }
 }
