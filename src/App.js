@@ -11,6 +11,11 @@ import { PlayGame } from "./views/GameViews/PlayGame";
 import { GameOver } from "./views/GameViews/GameOver"
 import { AllUsers } from "./views/UserViews/AllUsers";
 import { AllGames } from "./views/GameViews/AllGames";
+// npx triframe deploy precarious (after a while this will fail)
+// git add .
+// git commit -m "-"
+// git push heroku precarious:main
+// git checkout main
 
 export default () => (
   <Provider url="http://localhost:8080">

@@ -1,1 +1,1 @@
-{"name":"Precarious","platform":"native"}
+{"name":"Precarious","platform":"native", "deployments":{"precarious": { "target": "Heroku", "options": {}}}}
