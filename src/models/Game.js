@@ -45,10 +45,15 @@ export class Game extends Resource {
         })
         const judge = await Player.create({userId: currentUserId, isJudge: true, gameId: newGame.id})
         
-        return ({ 
-            newGame,
-            judge
-        })
+        return (
+            Game.read(newGame.id, `
+                    *,
+                    players {
+                        *
+                    }
+                `, judge
+            )
+        )
     }
 
     static async invitePlayers(currentGameId, userId) {
@@ -74,6 +79,8 @@ export class Game extends Resource {
         )
 
     }
+
+
     // enableBuzzer method available to player with isJudge set to true.
     // enableBuzzer can be used after a wrong answer, or after points are scored.
   static async enableBuzzer(currentUser, currentGameId) {
