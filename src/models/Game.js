@@ -16,7 +16,12 @@ const hereComesTheJudge = ({ session, resource }) => {
   return session.loggedInUserId === judge.id;
 };
 
-const triviaApiEndpoint = `https://opentdb.com/api.php?amount=3`;
+const triviaApiEndpoint = (amount, difficulty, category) => {
+  return `https://opentdb.com/api.php?amount=${amount ?? 3}&difficulty=${
+    difficulty ?? ""
+  }&category=${category ?? ""}`;
+};
+const triviaCategoriesApiEndpoint = "https://opentdb.com/api_category.php";
 
 export class Game extends Resource {
   @include(Model)
@@ -44,10 +49,27 @@ export class Game extends Resource {
   @hasMany({ through: (game) => game.players.user })
   users;
 
-  async getQuestions() {
-    let response = await fetch(triviaApiEndpoint);
+  async getQuestions(numberOfQuestions, difficulty, category) {
+    let response = await fetch(
+      triviaApiEndpoint(numberOfQuestions, difficulty, category)
+    );
     let questions = await response.json();
-    console.log(questions);
+    if (questions.results !== null && questions.results.length > 0) {
+      return questions.results;
+    }
+    return null;
+  }
+
+  static async getQuestionCategories() {
+    let response = await fetch(triviaCategoriesApiEndpoint);
+    let categories = await response.json();
+    if (
+      categories.trivia_categories !== null &&
+      categories.trivia_questions.length > 0
+    ) {
+      return categories.trivia_questions;
+    }
+    return null;
   }
 
   async getJudge() {
