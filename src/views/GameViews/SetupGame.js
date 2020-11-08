@@ -1,6 +1,7 @@
 import {
   Area,
   BubbleButton,
+  Button,
   Container,
   Heading,
   List,
@@ -14,6 +15,9 @@ export const SetupGame = tether(function* ({ Api, useParams }) {
   const { Game, User, Player } = Api;
   const game = yield Game.read(id);
   const availableUsers = yield User.where({ isAvailable: true });
+
+  const players = yield Player.where({ gameId: id });
+  const notEnoughPlayers = yield players.length < 3;
 
   return (
     <Container>
@@ -33,6 +37,7 @@ export const SetupGame = tether(function* ({ Api, useParams }) {
           </Area>
         ))}
       </Section>
+      <Button disabled={notEnoughPlayers}>START!</Button>
     </Container>
   );
 });
