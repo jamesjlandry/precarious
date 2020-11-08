@@ -109,8 +109,8 @@ export class Game extends Resource {
 
   // frontend method should check for if currentGame.currentRound > currentGame.rounds and
   // run declareWinner on that condition.
-  static async declareWinner(currentGameId) {
-    let game = await Game.read(currentGameId);
-    return game.players.sort((a, b) => a.score - b.score);
+    async declareWinner() {
+   
+    return this.players.sort((a, b) => a.score - b.score);
   }
 }
