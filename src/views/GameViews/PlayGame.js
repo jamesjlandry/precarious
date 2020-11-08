@@ -12,8 +12,9 @@ import {
 } from "@triframe/designer";
 
 
-export const PlayGame = tether(function* ({ Api, redirect }) {
+export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
   const { Game, Player } = Api;
+  const { id } = yield useParams()
 
  
   const cardStyle = {padding: '10px', borderStyle:'solid', borderRadius:'15px', backgroundColor:"rgb(245,245,245)"}
@@ -25,6 +26,7 @@ export const PlayGame = tether(function* ({ Api, redirect }) {
   const currentUser = yield User.current();
   const currentPlayer = yield Player.current();
   const answering = false;
+  const players = yield Player.where({gameId: id, isJudge: false}, `*, user { * }`)
   
 
   return (
@@ -45,7 +47,19 @@ export const PlayGame = tether(function* ({ Api, redirect }) {
             </Card>
         </Area>
         <Area alignY="bottom">
-        {currentPlayer.isJudge ? <Card>judgemental stuff</Card> : <Card style={cardStyle}>
+        {currentPlayer.isJudge ? <Card>
+          <Area>
+          {players.map(player => <Section><Card>{player.user.username}</Card></Section>)}
+          </Area>
+          
+          
+          
+          
+          </Card> 
+        
+        
+        
+        : <Card style={cardStyle}>
             <Heading><b>Player Window</b></Heading>
                 <Button style={buttonStyle.buzzer} onClick={()=> {
                     console.log("buzz in!")
