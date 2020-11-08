@@ -34,7 +34,7 @@ export class Player extends Resource {
 
   async buzzIn(currentGameId) {
     if (this.buzzerIsEnabled === true) {
-      const players = await Player.where({ game_id: currentGameId });
+      let players = await Player.where({ game_id: currentGameId });
 
       players = players.map((player) => (player.buzzerIsEnabled = false));
 

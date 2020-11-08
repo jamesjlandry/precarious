@@ -24,7 +24,7 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
     inactiveBuzzer: {minHeight: "25vh", backgroundColor:"grey", borderRadius:"50px"}
   }
 
-  const currentGame = yield Game.read(id)
+  const currentGame = yield Game.where({id: id}, `*, players {*}`)
   const currentUser = yield User.current();
   const currentPlayer = yield Player.current();      
                     
@@ -35,16 +35,17 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
     points: 0,
     currentGameId: null,
   }
+console.log(currentGame)
 
   return (
     <Container>
         <Area>
-        <Heading>round: {Game.currentRound ? Game.currentRound : '-'}/{Game.rounds ? Game.rounds : '-'} </Heading>
+        <Heading>round: {currentGame.currentRound ? currentGame.currentRound : '-'}/{currentGame.rounds ? currentGame.rounds : '-'} </Heading>
         </Area>
         <Area alignX="right" style={{padding: '10px'}} >
             <Card style={cardStyle}>
             <Heading><b>Players</b></Heading>
-                <Section>{Game.players ? Game.players.map((player) => 
+                <Section>{currentGame.players ? currentGame.players.map((player) => 
                     <Card>
                         {player.name} : {player.score}
                     </Card>
@@ -66,7 +67,7 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
                 value={form.points}
                 onChange={value => form.points = value}
               />
-              <Button disabled={currentGame.buzzedInPlayerId === null} onPress={() => Game.assignPoints(currentGame.buzzedInPlayerId, form.points, id)}>
+              <Button disabled={currentGame.buzzedInPlayerId === null} onPress={() => {console.log(currentGame.buzzedInPlayerId), Game.assignPoints(currentGame.buzzedInPlayerId, form.points, id)}}>
                 Make it So
               </Button>
             </Section>

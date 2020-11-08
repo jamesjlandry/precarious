@@ -131,26 +131,28 @@ export class Game extends Resource {
   }
   // enableBuzzer method available to player with isJudge set to true.
   // enableBuzzer can be used after a wrong answer, or after points are scored.
-  static async enableBuzzer(currentUser, currentGameId) {
-    const players = await Player.where({ gameId: currentGameId });
-    if (currentUser.isJudge === true) {
+  static async enableBuzzer(currentGameId) {
+    let players = await Player.where({ gameId: currentGameId });
+   
       players = players.map((player) => (player.buzzerIsEnabled = true));
-    }
+
     return players;
   }
 
   static async dissableBuzzer(currentGameId) {
-    const players = await Player.where({ gameId: currentGameId });
-    players = players.map((player) => (player.buzzerIsEnabled = true));
+    let players = await Player.where({ gameId: currentGameId });
+    players = players.map((player) => (player.buzzerIsEnabled = false));
     return players;
   }
 
   // assignPoints method available to player with isJudge set to true.
   static async assignPoints(pointWinnerId, points, currentGameId) {
+      console.log(pointWinnerId)
     const pointWinner = await Player.read(pointWinnerId);
-    pointWinner.score = pointWinner.score + parseInt(points, 10);
+    pointWinner.score = pointWinner.score + parseInt(points);
     const currentGame = Game.read(currentGameId);
-    currentGame.currentRound++;
+    currentGame.currentRound = currentGame.currentRound + 1
+    currentGame.buzzedInPlayerId = null
     return pointWinner;
   }
 
