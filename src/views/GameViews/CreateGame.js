@@ -33,11 +33,11 @@ export const CreateGame = tether(function* ({ Api, redirect }) {
         <Button
           onPress={async () => {
             const game = await Game.createGame(
-              currentUser,
+              currentUser.id,
               form.name,
               form.rounds
             );
-            redirect(`/setup-game/${game.id}`);
+            redirect(`/setup-game/${game.newGame.id}`);
           }}
         >
           Make The Game!
