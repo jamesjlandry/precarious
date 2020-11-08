@@ -1,4 +1,4 @@
-import { Resource } from '@triframe/core'
+ import { Resource } from '@triframe/core'
 import { include, Model, boolean, integer, belongsTo,} from '@triframe/scribe'
 import { Game } from './Game'
 

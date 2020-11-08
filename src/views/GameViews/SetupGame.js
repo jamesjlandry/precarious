@@ -8,6 +8,7 @@ import {
   List,
   Section,
   tether,
+  Icon,
 } from "@triframe/designer";
 import React from "react";
 
@@ -26,7 +27,7 @@ export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
         Select players for {game.name == "" || null ? "your game" : game.name}
       </Heading>
       <Section width="50%">
-        {availableUsers.map((user) => (
+        {availableUsers.length > 0 ? availableUsers.map((user) => (
           <Area inline key={user.id}>
             <BubbleButton
               icon="plus"
@@ -36,7 +37,11 @@ export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
               <List.Item title={user.username} />
             </Area>
           </Area>
-        ))}
+        )): <Area>no users available
+         <BubbleButton
+              onPress={() => Game.invitePlayers(id, user.id)}
+            ><Icon name="plus"></Icon></BubbleButton>
+            </Area>}
       </Section>
       <Button disabled={notEnoughPlayers} onClick={()=>redirect(`/play/${game.id}`)}>START!</Button>
     </Container>
