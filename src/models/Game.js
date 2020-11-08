@@ -2,6 +2,8 @@ import { Resource } from "@triframe/core";
 import {
   boolean,
   hasMany,
+  hidden,
+  hiddenUnless,
   include,
   integer,
   Model,
@@ -48,6 +50,9 @@ export class Game extends Resource {
 
   @hasMany({ through: (game) => game.players.user })
   users;
+
+  @hidden
+  delete;
 
   async getQuestions(numberOfQuestions, difficulty, category) {
     let response = await fetch(
