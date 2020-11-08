@@ -93,12 +93,9 @@ export class Game extends Resource {
         return pointWinner
     }
 
-  static async declareWinner(currentRound, currentGameId) {
-    let game = await Game.read(currentGameId);
-    if (currentRound > game.rounds) {
-      return game.players.sort((a, b) => a.score - b.score);
+  static async declareWinner(currentGameId) {
+        let game = await Game.read(currentGameId);
+        return game.players.sort((a, b) => a.score - b.score);
     }
-
-}
 
 }
