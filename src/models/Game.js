@@ -1,7 +1,5 @@
 import { Resource } from "@triframe/core";
 import {
-  array,
-  belongsTo,
   boolean,
   hasMany,
   include,
@@ -9,7 +7,6 @@ import {
   Model,
   string,
 } from "@triframe/scribe";
-import { session, stream } from "@triframe/scribe/dist/decorators";
 import { Player } from "./Player";
 import { User } from "./User";
 
@@ -43,7 +40,7 @@ export class Game extends Resource {
             isActive: true,
             currentRound: 0
         })
-        const judge = await Player.create({user_id: currentUserId, isJudge: true, game_id: newGame.id})
+        const judge = await Player.create({userId: currentUserId, isJudge: true, gameId: newGame.id})
         
         return ({ 
             newGame,
@@ -73,10 +70,9 @@ export class Game extends Resource {
             `)
         )
 
-    let currentUser = await User.read(userId);
-
     }
-
+    // enableBuzzer method available to player with isJudge set to true.
+    // enableBuzzer can be used after a wrong answer, or after points are scored.
   static async enableBuzzer(currentUser, currentGameId) {
     const players = await Player.where({ game_id: currentGameId });
     if (currentUser.isJudge === true) {
@@ -84,7 +80,7 @@ export class Game extends Resource {
     }
     return players;
   }
-
+        // assignPoints method available to player with isJudge set to true.
     static async assignPoints(pointWinnerId, points, currentGameId) {
         const pointWinner = await Player.read(pointWinnerId)
         pointWinner.score = pointWinner.score + points
@@ -93,10 +89,11 @@ export class Game extends Resource {
         return pointWinner
     }
 
-  static async declareWinner(currentRound, currentGameId) {
-    let game = await Game.read(currentGameId);
-    if (currentRound > game.rounds) {
-      return game.players.sort((a, b) => a.score - b.score);
+    // frontend method should check for if currentGame.currentRound > currentGame.rounds and 
+    // run declareWinner on that condition. 
+  static async declareWinner(currentGameId) {
+        let game = await Game.read(currentGameId);
+        return game.players.sort((a, b) => a.score - b.score);
     }
 
 }

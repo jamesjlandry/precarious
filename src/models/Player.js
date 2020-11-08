@@ -1,5 +1,5 @@
 import { Resource } from '@triframe/core'
-import { include, Model, string, boolean, integer, belongsTo,} from '@triframe/scribe'
+import { include, Model, boolean, integer, belongsTo,} from '@triframe/scribe'
 import { Game } from './Game'
 
 export class Player extends Resource {
