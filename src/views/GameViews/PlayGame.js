@@ -24,6 +24,7 @@ export const PlayGame = tether(function* ({ Api, redirect }) {
   }
   const currentUser = yield User.current();
   const answering = false;
+  
 
   return (
     <Container>
