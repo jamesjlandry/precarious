@@ -27,7 +27,7 @@ export const AllUsers = tether(function* ({ Api, redirect }) {
               onPress={() => redirect(`/view-user/${user.id}`)}
             />
             <BubbleButton
-              disabled={user.id !== currentUser.id}
+              disabled={user.id !== currentUser?.id}
               icon="delete"
               onPress={() => user.delete()}
             />

@@ -23,6 +23,7 @@ export const PlayGame = tether(function* ({ Api, redirect }) {
     buzzer: {minHeight: "25vh", backgroundColor:"red", borderRadius:"50px"}
   }
   const currentUser = yield User.current();
+  const currentPlayer = yield Player.current();
   const answering = false;
   
 
@@ -44,13 +45,13 @@ export const PlayGame = tether(function* ({ Api, redirect }) {
             </Card>
         </Area>
         <Area alignY="bottom">
-        <Card style={cardStyle}>
+        {currentPlayer.isJudge ? <Card>judgemental stuff</Card> : <Card style={cardStyle}>
             <Heading><b>Player Window</b></Heading>
                 <Button style={buttonStyle.buzzer} onClick={()=> {
                     console.log("buzz in!")
                     /*currentPlayer.buzzIn*/
                     }}>Buzzer</Button>
-            </Card>
+            </Card>}
         </Area>
 
     </Container>
