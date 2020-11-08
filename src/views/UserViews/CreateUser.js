@@ -10,13 +10,13 @@ import {
   Button,
 } from "@triframe/designer";
 
-export const LoginUser = tether(function* ({ Api, redirect }) {
+export const CreateUser = tether(function* ({ Api, redirect }) {
   const { User } = Api;
   const form = yield { username: "", password: "", errorMsg: null };
 
   return (
     <Container>
-      <Heading>Log In</Heading>
+      <Heading>Create New User</Heading>
       <Section>
         <TextInput
           label="username"
@@ -33,14 +33,14 @@ export const LoginUser = tether(function* ({ Api, redirect }) {
         <Button
           onPress={async () => {
             try {
-              await User.login(form.username, form.password);
-              redirect("/view-user");
+              const user = await User.register(form.username, form.password);
+              redirect(`/view-user/${user.id}`);
             } catch (error) {
               form.errorMsg = error.message;
             }
           }}
         >
-          Log In
+          Create User
         </Button>
         <HelperText type="error" visible={form.errorMsg !== null}>
           {form.errorMsg}

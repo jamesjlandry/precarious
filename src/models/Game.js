@@ -1,5 +1,6 @@
 import { Resource } from "@triframe/core";
 import {
+  array,
   belongsTo,
   boolean,
   hasMany,
@@ -17,7 +18,7 @@ export class Game extends Resource {
 
 
   @hasMany
-  players = []
+  players = [];
 
   @string
   name = "";
