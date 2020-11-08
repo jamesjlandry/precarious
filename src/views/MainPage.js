@@ -4,7 +4,6 @@ import {
   Section,
   Container,
   Heading,
-  Redirect,
   Subheading,
   Button,
 } from "@triframe/designer";
