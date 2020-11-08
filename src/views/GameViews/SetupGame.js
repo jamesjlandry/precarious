@@ -1,3 +1,4 @@
+import { Redirect } from "@triframe/arbiter-react";
 import {
   Area,
   BubbleButton,
@@ -54,6 +55,9 @@ export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
          
         </Area> }
       </Section>
+<<<<<<< HEAD
+      <Button disabled={notEnoughPlayers} onClick={()=>redirect(`/play/${game.id}`)}>START!</Button>
+=======
       <Button
         disabled={notEnoughPlayers}
         onPress={() => {
@@ -62,6 +66,7 @@ export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
       >
         START!
       </Button>
+>>>>>>> a2d62761bcddcf95e3fb58614de9b52778360cab
     </Container>
   );
 });

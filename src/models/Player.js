@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+ import { Resource } from '@triframe/core'
+import { include, Model, boolean, integer, belongsTo,} from '@triframe/scribe'
+import { Game } from './Game'
+=======
 import { Resource } from "@triframe/core";
 import {
   include,
@@ -10,6 +15,7 @@ import {
 import { session, stream } from "@triframe/scribe/dist/decorators";
 import { Game } from "./Game";
 import { User } from "./User";
+>>>>>>> a2d62761bcddcf95e3fb58614de9b52778360cab
 
 export class Player extends Resource {
   @include(Model)
