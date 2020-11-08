@@ -49,7 +49,7 @@ export class Game extends Resource {
       isActive: true,
       currentRound: 0,
     });
-    const judge = await Player.create({
+    await Player.create({
       userId: currentUserId,
       isJudge: true,
       gameId: newGame.id,
@@ -62,8 +62,7 @@ export class Game extends Resource {
             players {
                 *
             }
-            `,
-      judge
+            `
     );
   }
 

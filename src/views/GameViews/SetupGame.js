@@ -44,14 +44,13 @@ export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
           </Area>
         ))}
       </Section>
-      <Button disabled={notEnoughPlayers}>START!</Button>
       <Button
+        disabled={notEnoughPlayers}
         onPress={() => {
-          game.isActive = false;
-          redirect(`/view-user/${currentUser.id}`);
+          (game.currentRound = 1), redirect(`/play/${game.id}`);
         }}
       >
-        No, nevermind
+        START!
       </Button>
     </Container>
   );
