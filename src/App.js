@@ -7,6 +7,7 @@ import { ViewUser } from "./views/UserViews/ViewUser";
 import { CreateGame } from "./views/GameViews/CreateGame";
 import { JoinGame } from "./views/GameViews/JoinGame";
 import { SetupGame } from "./views/GameViews/SetupGame";
+import { AllUsers } from "./views/UserViews/AllUsers";
 
 export default () => (
   <Provider url="http://localhost:8080">
@@ -14,11 +15,7 @@ export default () => (
     <Route exact path="/login" component={LoginUser} />
     <Route exact path="/create-user" component={CreateUser} />
     <Route exact path="/view-user/:id" component={ViewUser} />
-    <Route
-      exact
-      path="/view-user/"
-      component={() => <Redirect to="/login" />}
-    />
+    <Route exact path="/view-user" component={AllUsers} />
     <Route exact path="/create-game" component={CreateGame} />
     <Route exact path="/join-game" component={JoinGame} />
     <Route exact path="/setup-game/:id" component={SetupGame} />
