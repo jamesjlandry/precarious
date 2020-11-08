@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Area,
+  BubbleButton,
   Button,
   Container,
   Heading,
@@ -55,7 +56,25 @@ export const ViewUser = tether(function* ({ Api, redirect, useParams }) {
             </Section>
           </Section>
         ) : (
-          <Section />
+          <Section>
+            {me === null ? (
+              <Area inline>
+                <Area alignY="center">
+                  <Heading>You're not logged in</Heading>
+                </Area>
+                <Area alignY="center">
+                  <BubbleButton
+                    icon="login"
+                    onPress={() => redirect("/login")}
+                  />
+                </Area>
+              </Area>
+            ) : (
+              <Heading>
+                Wait, you're not {user.username}, you're {me.username}!
+              </Heading>
+            )}
+          </Section>
         )}
       </Container>
     );
