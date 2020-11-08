@@ -150,7 +150,8 @@ export class Game extends Resource {
       console.log(pointWinnerId)
     const pointWinner = await Player.read(pointWinnerId);
     pointWinner.score = pointWinner.score + parseInt(points);
-    const currentGame = Game.read(currentGameId);
+    const currentGame = await Game.read(currentGameId);
+    console.log(currentGame)
     currentGame.currentRound = currentGame.currentRound + 1
     currentGame.buzzedInPlayerId = null
     return pointWinner;

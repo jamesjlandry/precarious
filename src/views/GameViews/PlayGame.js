@@ -24,7 +24,7 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
     inactiveBuzzer: {minHeight: "25vh", backgroundColor:"grey", borderRadius:"50px"}
   }
 
-  const currentGame = yield Game.where({id: id}, `*, players {*}`)
+  const [currentGame] = yield Game.where({id: id}, `*, players {*}`)
   const currentUser = yield User.current();
   const currentPlayer = yield Player.current();      
                     
@@ -45,13 +45,14 @@ console.log(currentGame)
         <Area alignX="right" style={{padding: '10px'}} >
             <Card style={cardStyle}>
             <Heading><b>Players</b></Heading>
-                <Section>{currentGame.players ? currentGame.players.map((player) => 
+                <Section>{ players.map((player) => 
                     <Card>
-                        {player.name} : {player.score}
+                        {player.user.username} : {player.score}
                     </Card>
-                ) : null}
-
+                   
+                )}
                 </Section>
+                
             </Card>
         </Area>
         <Area alignY="bottom">
