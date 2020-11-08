@@ -1,5 +1,5 @@
 import React from "react";
-import { Provider, Route } from "@triframe/designer";
+import { Provider, Route, Redirect } from "@triframe/designer";
 import { CreateUser } from "./views/UserViews/CreateUser";
 import { MainPage } from "./views/MainPage";
 import { LoginUser } from "./views/UserViews/LoginUser";
@@ -9,13 +9,16 @@ import { JoinGame } from "./views/GameViews/JoinGame";
 import { SetupGame } from "./views/GameViews/SetupGame";
 
 export default () => (
-  <Provider url={process.env.REACT_APP_BACKEND_URL}>
+  <Provider url="http://localhost:8080">
     <Route exact path="/" component={MainPage} />
     <Route exact path="/login" component={LoginUser} />
     <Route exact path="/create-user" component={CreateUser} />
     <Route exact path="/view-user/:id" component={ViewUser} />
-    {/* TODO: this should redirect, not just render a diffent component */}
-    <Route exact path="/view-user/" component={LoginUser} />
+    <Route
+      exact
+      path="/view-user/"
+      component={() => <Redirect to="/login" />}
+    />
     <Route exact path="/create-game" component={CreateGame} />
     <Route exact path="/join-game" component={JoinGame} />
     <Route exact path="/setup-game/:id" component={SetupGame} />
