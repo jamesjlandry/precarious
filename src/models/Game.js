@@ -28,6 +28,9 @@ export class Game extends Resource {
   @integer
   currentRound = 0;
 
+  @integer
+  buzzedInPlayerId = null
+
   @string
   question = "";
 
@@ -42,7 +45,8 @@ export class Game extends Resource {
         const newGame = await Game.create({
             name: name, 
             rounds: rounds, 
-            isActive: true
+            isActive: true,
+            currentRound: 0
         })
         const judge = await Player.create({user_id: currentUserId, isJudge: true, game_id: newGame.id})
         
@@ -57,35 +61,27 @@ export class Game extends Resource {
         const player = await Player.create({
             isJudge: false,
             score: 0,
-            game_id: currentGameId,
-            user_id: userId
+            gameId: currentGameId,
+            userId: userId
         })
 
-        let currentUser = await User.read(userId)
+        let selectedPlayer = await User.read(userId)
 
-        currentUser.isAvailable = false
+        selectedPlayer.isAvailable = false
 
-        return({
-            player,
-            currentUser
-        })
+        return(
+            Player.read(player.id, `
+                *, 
+                game {
+                    *
+                }
+            `)
+        )
 
 
     }
 
-    static async buzzIn(currentGameId, userId) {
-
-        const buzzedInPlayer = await Player.read(userId)
-        const players = await Player.where({game_id: currentGameId})
-
-        players = players.map(player => player.buzzerIsEnabled = false)
-
-        return ({
-            buzzedInPlayer,
-            players
-        })
-
-    }
+   
 
     static async enableBuzzer(currentUser, currentGameId) {
         const players = await Player.where({game_id: currentGameId})
@@ -95,10 +91,11 @@ export class Game extends Resource {
         return players
     }
 
-    static async assignPoints(pointWinnerId, points) {
+    static async assignPoints(pointWinnerId, points, currentGameId) {
         const pointWinner = await Player.read(pointWinnerId)
         pointWinner.score = pointWinner.score + points
-
+        const currentGame = Game.read(currentGameId)
+        currentGame.currentRound ++
         return pointWinner
     }
 

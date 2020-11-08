@@ -1,5 +1,6 @@
 import { Resource } from '@triframe/core'
 import { include, Model, string, boolean, integer, belongsTo,} from '@triframe/scribe'
+import { Game } from './Game'
 
 export class Player extends Resource {
     @include(Model)
@@ -19,5 +20,21 @@ export class Player extends Resource {
     @boolean
     isJudge = false
    
+    
+    async buzzIn(currentGameId) {
+        
+        if(this.buzzerIsEnabled === true) {
+            const players = await Player.where({game_id: currentGameId})
+
+            players = players.map(player => player.buzzerIsEnabled = false)
+
+            const game = await Game.read(currentGameId)
+
+            game.buzzedInPlayerId = this.id
+
+            return ( players )
+        }
+
+    }
 
 }
