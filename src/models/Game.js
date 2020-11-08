@@ -33,6 +33,9 @@ export class Game extends Resource {
   @boolean
   isActive = false;
 
+  @hasMany({ through: (game) => game.players.user})
+  users;
+
     static async createGame(currentUserId, name, rounds) {
         const newGame = await Game.create({
             name: name, 
