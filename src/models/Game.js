@@ -27,62 +27,55 @@ export class Game extends Resource {
   @integer
   currentRound = 0;
 
+  @integer
+  buzzedInPlayerId = null
+
   @string
   question = "";
 
   @boolean
   isActive = false;
 
-  @integer
-  buzzedInPlayerId;
+    static async createGame(currentUserId, name, rounds) {
+        const newGame = await Game.create({
+            name: name, 
+            rounds: rounds, 
+            isActive: true,
+            currentRound: 0
+        })
+        const judge = await Player.create({user_id: currentUserId, isJudge: true, game_id: newGame.id})
+        
+        return ({ 
+            newGame,
+            judge
+        })
+    }
 
-  static async createGame(currentUserId, name, rounds) {
-    const newGame = await Game.create({
-      name: name,
-      rounds: rounds,
-      isActive: true,
-    });
-    const judge = await Player.create({
-      user_id: currentUserId,
-      isJudge: true,
-      game_id: newGame.id,
-    });
+    static async invitePlayers(currentGameId, userId) {
 
-    return {
-      newGame,
-      judge,
-    };
-  }
+        const player = await Player.create({
+            isJudge: false,
+            score: 0,
+            gameId: currentGameId,
+            userId: userId
+        })
 
-  static async invitePlayers(currentGameId, userId) {
-    const player = await Player.create({
-      isJudge: false,
-      score: 0,
-      game_id: currentGameId,
-      user_id: userId,
-    });
+        let selectedPlayer = await User.read(userId)
+
+        selectedPlayer.isAvailable = false
+
+        return(
+            Player.read(player.id, `
+                *, 
+                game {
+                    *
+                }
+            `)
+        )
 
     let currentUser = await User.read(userId);
 
-    currentUser.isAvailable = false;
-
-    return {
-      player,
-      currentUser,
-    };
-  }
-
-  static async buzzIn(currentGameId, userId) {
-    const buzzedInPlayer = await Player.read(userId);
-    const players = await Player.where({ game_id: currentGameId });
-
-    players = players.map((player) => (player.buzzerIsEnabled = false));
-
-    return {
-      buzzedInPlayer,
-      players,
-    };
-  }
+    }
 
   static async enableBuzzer(currentUser, currentGameId) {
     const players = await Player.where({ game_id: currentGameId });
@@ -92,17 +85,18 @@ export class Game extends Resource {
     return players;
   }
 
-  static async assignPoints(pointWinnerId, points) {
-    const pointWinner = await Player.read(pointWinnerId);
-    pointWinner.score = pointWinner.score + points;
-
-    return pointWinner;
-  }
+    static async assignPoints(pointWinnerId, points, currentGameId) {
+        const pointWinner = await Player.read(pointWinnerId)
+        pointWinner.score = pointWinner.score + points
+        const currentGame = Game.read(currentGameId)
+        currentGame.currentRound ++
+        return pointWinner
+    }
 
   static async declareWinner(currentRound, currentGameId) {
     let game = await Game.read(currentGameId);
     if (currentRound > game.rounds) {
       return game.players.sort((a, b) => a.score - b.score);
     }
-  }
+
 }
