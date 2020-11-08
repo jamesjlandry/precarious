@@ -28,7 +28,7 @@ export class Game extends Resource {
   currentRound = 0;
 
   @integer
-  buzzedInPlayerId = null
+  buzzedInPlayerId = null;
 
   @string
   question = "";
@@ -36,46 +36,49 @@ export class Game extends Resource {
   @boolean
   isActive = false;
 
-    static async createGame(currentUserId, name, rounds) {
-        const newGame = await Game.create({
-            name: name, 
-            rounds: rounds, 
-            isActive: true,
-            currentRound: 0
-        })
-        const judge = await Player.create({user_id: currentUserId, isJudge: true, game_id: newGame.id})
-        
-        return ({ 
-            newGame,
-            judge
-        })
-    }
+  static async createGame(currentUserId, name, rounds) {
+    const newGame = await Game.create({
+      name: name,
+      rounds: rounds,
+      isActive: true,
+      currentRound: 0,
+    });
+    const judge = await Player.create({
+      userId: currentUserId,
+      isJudge: true,
+      gameId: newGame.id,
+    });
 
-    static async invitePlayers(currentGameId, userId) {
+    return {
+      newGame,
+      judge,
+    };
+  }
 
-        const player = await Player.create({
-            isJudge: false,
-            score: 0,
-            gameId: currentGameId,
-            userId: userId
-        })
+  static async invitePlayers(currentGameId, userId) {
+    const player = await Player.create({
+      isJudge: false,
+      score: 0,
+      gameId: currentGameId,
+      userId: userId,
+    });
 
-        let selectedPlayer = await User.read(userId)
+    let selectedPlayer = await User.read(userId);
 
-        selectedPlayer.isAvailable = false
+    selectedPlayer.isAvailable = false;
 
-        return(
-            Player.read(player.id, `
+    return Player.read(
+      player.id,
+      `
                 *, 
                 game {
                     *
                 }
-            `)
-        )
+            `
+    );
 
     let currentUser = await User.read(userId);
-
-    }
+  }
 
   static async enableBuzzer(currentUser, currentGameId) {
     const players = await Player.where({ game_id: currentGameId });
@@ -85,18 +88,18 @@ export class Game extends Resource {
     return players;
   }
 
-    static async assignPoints(pointWinnerId, points, currentGameId) {
-        const pointWinner = await Player.read(pointWinnerId)
-        pointWinner.score = pointWinner.score + points
-        const currentGame = Game.read(currentGameId)
-        currentGame.currentRound ++
-        return pointWinner
-    }
+  static async assignPoints(pointWinnerId, points, currentGameId) {
+    const pointWinner = await Player.read(pointWinnerId);
+    pointWinner.score = pointWinner.score + points;
+    const currentGame = Game.read(currentGameId);
+    currentGame.currentRound++;
+    return pointWinner;
+  }
 
   static async declareWinner(currentRound, currentGameId) {
     let game = await Game.read(currentGameId);
     if (currentRound > game.rounds) {
       return game.players.sort((a, b) => a.score - b.score);
     }
-
+  }
 }
