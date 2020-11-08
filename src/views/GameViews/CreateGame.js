@@ -37,7 +37,7 @@ export const CreateGame = tether(function* ({ Api, redirect }) {
               form.name,
               form.rounds
             );
-            redirect(`/setup-game/${game.newGame.id}`);
+            redirect(`/setup-game/${game.id}`);
           }}
         >
           Make The Game!

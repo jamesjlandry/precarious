@@ -1,9 +1,11 @@
 import React from "react";
 import {
+  Area,
   Button,
   Container,
   Heading,
   Section,
+  Subheading,
   tether,
 } from "@triframe/designer";
 
@@ -15,21 +17,46 @@ export const ViewUser = tether(function* ({ Api, redirect, useParams }) {
   } else {
     const { User } = Api;
     const user = yield User.read(id);
+    const me = yield User.current();
+    const thisIsMe = id == me?.id;
+
     return (
       <Container>
-        <Heading>Welcome, {user.username}!</Heading>
-        {/* TODO: this only renders if this is the logged in user's page */}
-        <Section>
-          <Button onClick={() => redirect("/create-game")}>Create Game</Button>
-          <Button
-            onClick={() => {
-              user.isAvailable = true;
-              redirect("/join-game");
-            }}
-          >
-            Join A Game
-          </Button>
-        </Section>
+        <Heading>{user.username}</Heading>
+        {thisIsMe ? (
+          <Section>
+            <Area inline>
+              <Area alignY="center">
+                <Subheading>Welcome!</Subheading>
+              </Area>
+              <Button
+                icon="logout"
+                size="sm"
+                onClick={() => {
+                  User.logout();
+                  redirect("/login");
+                }}
+              >
+                Logout
+              </Button>
+            </Area>
+            <Section>
+              <Button onClick={() => redirect("/create-game")}>
+                Create Game
+              </Button>
+              <Button
+                onClick={() => {
+                  user.isAvailable = true;
+                  redirect("/join-game");
+                }}
+              >
+                Join A Game
+              </Button>
+            </Section>
+          </Section>
+        ) : (
+          <Section />
+        )}
       </Container>
     );
   }
