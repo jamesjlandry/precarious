@@ -107,7 +107,7 @@ export class Game extends Resource {
   // assignPoints method available to player with isJudge set to true.
   static async assignPoints(pointWinnerId, points, currentGameId) {
     const pointWinner = await Player.read(pointWinnerId);
-    pointWinner.score = pointWinner.score + points;
+    pointWinner.score = pointWinner.score + parseInt(points, 10);
     const currentGame = Game.read(currentGameId);
     currentGame.currentRound++;
     return pointWinner;

@@ -23,11 +23,17 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
     inactive: {backgroundColor:"rgb(230,230,230)", borderRadius:"15px"},
     buzzer: {minHeight: "25vh", backgroundColor:"red", borderRadius:"50px"}
   }
+
+  const currentGame = yield Game.read(id)
   const currentUser = yield User.current();
   const currentPlayer = yield Player.current();
   const answering = false;
   const players = yield Player.where({gameId: id, isJudge: false}, `*, user { * }`)
-  
+  const form = yield {
+    pointWinnerId: null,
+    points: 0,
+    currentGameId: null,
+  }
 
   return (
     <Container>
@@ -51,8 +57,29 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
           <Area>
           {players.map(player => <Section><Card>{player.user.username}</Card></Section>)}
           </Area>
+          <Section>
+            
+            <Section>
+              <TextInput 
+                label="Points"
+                value={form.points}
+                onChange={value => form.points = value}
+              />
+              <Button disabled={buzzedInPlayer === null} onPress={() => Game.assignPoints(currentGame.buzzedInPlayer, form.points, id)}>
+                Make it So
+              </Button>
+            </Section>
+            
           
-          
+          </Section>
+          <Section>
+            <Button onPress={()=> Game.enableBuzzer(id)}>
+                Enable Buzzers
+            </Button>
+            <Button onPress={() => Game.dissableBuzzer(id)}>
+                Disable Buzzers
+            </Button>
+          </Section>
           
           
           </Card> 
