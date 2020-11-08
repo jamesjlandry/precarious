@@ -37,8 +37,6 @@ export class Game extends Resource {
   @boolean
   isActive = false;
 
-  @integer
-  buzzedInPlayerId
 
 
     static async createGame(currentUserId, name, rounds) {

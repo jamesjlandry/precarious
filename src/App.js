@@ -6,7 +6,7 @@ import { LoginUser } from "./views/LoginUser";
 import { ViewUser } from "./views/ViewUser";
 
 export default () => (
-  <Provider url={process.env.REACT_APP_BACKEND_URL}>
+  <Provider url="http://localhost:8080">
     <Route exact path="/" component={MainPage} />
     <Route exact path="/login" component={LoginUser} />
     <Route exact path="/create-user" component={CreateUser} />
