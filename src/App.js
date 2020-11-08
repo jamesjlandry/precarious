@@ -8,6 +8,7 @@ import { CreateGame } from "./views/GameViews/CreateGame";
 import { JoinGame } from "./views/GameViews/JoinGame";
 import { SetupGame } from "./views/GameViews/SetupGame";
 import { AllUsers } from "./views/UserViews/AllUsers";
+import { AllGames } from "./views/GameViews/AllGames";
 
 export default () => (
   <Provider url="http://localhost:8080">
@@ -19,5 +20,6 @@ export default () => (
     <Route exact path="/create-game" component={CreateGame} />
     <Route exact path="/join-game" component={JoinGame} />
     <Route exact path="/setup-game/:id" component={SetupGame} />
+    <Route exact path="/all-games" component={AllGames} />
   </Provider>
 );

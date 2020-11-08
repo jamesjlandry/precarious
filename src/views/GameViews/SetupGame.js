@@ -13,12 +13,19 @@ import React from "react";
 export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
   const { id } = yield useParams();
   const { Game, User, Player } = Api;
-  const currentUser = yield User.current();
+
   const game = yield Game.read(id);
+  const isActive = game.isActive;
+
+  const currentUser = yield User.current();
   const availableUsers = yield User.where({ isAvailable: true });
 
+  const notEnoughPlayers = players.length < 3;
   const players = yield Player.where({ gameId: id });
-  const notEnoughPlayers = yield players.length < 3;
+
+  if (!isActive) {
+    redirect(`/view-user/${currentUser.id}`);
+  }
 
   return (
     <Container>
