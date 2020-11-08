@@ -40,7 +40,7 @@ export class Game extends Resource {
             isActive: true,
             currentRound: 0
         })
-        const judge = await Player.create({user_id: currentUserId, isJudge: true, game_id: newGame.id})
+        const judge = await Player.create({userId: currentUserId, isJudge: true, gameId: newGame.id})
         
         return ({ 
             newGame,
