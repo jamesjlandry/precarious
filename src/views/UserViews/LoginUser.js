@@ -33,8 +33,8 @@ export const LoginUser = tether(function* ({ Api, redirect }) {
         <Button
           onPress={async () => {
             try {
-              await User.login(form.username, form.password);
-              redirect("/view-user");
+              const user = await User.login(form.username, form.password);
+              redirect(`/view-user/${user.id}`);
             } catch (error) {
               form.errorMsg = error.message;
             }

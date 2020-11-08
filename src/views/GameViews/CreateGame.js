@@ -10,17 +10,16 @@ import {
   Area,
   Card,
 } from "@triframe/designer";
-import { List } from "@triframe/core/dist/List";
 
 export const CreateGame = tether(function* ({ Api, redirect }) {
   const { User } = Api;
   const form = yield { name: "", rounds: 5, players: [] };
-  const availablePlayers = yield User.where({ isAvailable: true });
   const cardStyle = {padding: '10px', borderStyle:'solid', borderRadius:'15px', backgroundColor:"rgb(245,245,245)"}
   const buttonStyle = {
     active: {backgroundColor:"green", borderRadius:"15px"},
     inactive: {backgroundColor:"rgb(230,230,230)", borderRadius:"15px"},
   }
+  const currentUser = yield User.current();
 
   return (
     <Container>
@@ -29,29 +28,34 @@ export const CreateGame = tether(function* ({ Api, redirect }) {
       <Heading><b>Create a New Game</b></Heading>
       
       <Section>
-      <Area style={{ width: '100%'}}>
-        
-          
-          <Subheading>The name of the game is...</Subheading>
-          <TextInput
-            label="Optional"
-            value={form.name}
-            onChange={(value) => (form.name = value)}
-          />
-          <Subheading>How many questions will this game have?</Subheading>
-          <TextInput
-            label="Rounds"
-            value={form.rounds}
-            onChange={(value) => (form.rounds = value)}
-          />
-          <Subheading>Who do you want to play with?</Subheading>
-          {availablePlayers.map((player) => (
-            <List.Item title={player.username} />
-          ))}
-          <Area style={{paddingTop:"5px"}}>
-            <Button style={buttonStyle.active} onPress={async () => {}}>Make The Game!</Button>
-          </Area>
-        </Area>
+        <Subheading>The name of the game is...</Subheading>
+        <TextInput
+          label="Optional"
+          value={form.name}
+          onChange={(value) => (form.name = value)}
+        />
+        <Subheading>How many questions will this game have?</Subheading>
+        <TextInput
+          label="Rounds"
+          value={form.rounds}
+          onChange={(value) => (form.rounds = value)}
+        />
+        <div style={{padding:"15px"}}>
+          <Button style={buttonStyle.active}
+            onPress={async () => {
+              const game = await Game.createGame(
+                currentUser.id,
+                form.name,
+                form.rounds
+              );
+              
+              redirect(`/setup-game/${game.newGame.id}`);
+            }}
+          >
+            Make The Game!
+          </Button>
+        </div>
+       
       </Section>
       </Card>
       </Area>
