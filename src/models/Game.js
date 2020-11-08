@@ -100,3 +100,5 @@ export class Game extends Resource {
     }
 
 }
+
+}
