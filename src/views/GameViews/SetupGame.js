@@ -19,13 +19,12 @@ export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
 
   const currentUser = yield User.current();
   const availableUsers = yield User.where({ isAvailable: true });
-
-  const notEnoughPlayers = players.length < 3;
-  const players = yield Player.where({ gameId: id });
-
   if (!isActive) {
     redirect(`/view-user/${currentUser.id}`);
   }
+
+  const notEnoughPlayers = players?.length < 3;
+  const players = yield Player.where({ gameId: id });
 
   return (
     <Container>

@@ -2,7 +2,6 @@ import React from "react";
 import {
   Area,
   BubbleButton,
-  Button,
   Container,
   Heading,
   HelperText,
@@ -10,6 +9,7 @@ import {
   Section,
   tether,
 } from "@triframe/designer";
+import { ToggleSwitch } from "@triframe/designer/dist/Form";
 
 export const AllGames = tether(function* ({ Api, redirect }) {
   const { Game, User } = Api;
@@ -29,22 +29,20 @@ export const AllGames = tether(function* ({ Api, redirect }) {
                 icon="link"
                 onPress={() => redirect(`/setup-game/${game.id}`)}
               />
-              <Button
-                // disabled={judge.id !== currentUser.id}
-                icon="cancel"
-                onPress={() => (game.isActive = false)}
-              >
-                Disable Game
-              </Button>
+              <Area alignY="center">
+                <ToggleSwitch
+                  value={game.isActive}
+                  onPress={() => (game.isActive = !game.isActive)}
+                />
+              </Area>
               <Area alignY="center">
                 <List.Item
                   title={game.name === "" ? `Game ${game.id}` : game.name}
                 />
-                <Area alignY="center">
-                  <HelperText color="red">
-                    {game.isActive ? "is" : "is not"} active
-                  </HelperText>
-                </Area>
+
+                <HelperText color="red">
+                  {game.isActive ? "is" : "is not"} active
+                </HelperText>
               </Area>
             </Area>
           );
