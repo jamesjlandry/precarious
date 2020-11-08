@@ -20,13 +20,16 @@ export class User extends Resource {
   @hasMany({ through: (user) => user.players.game })
   games;
 
-  static async register(username, password) {
+  @session
+  static async register(session, username, password) {
     let existingUsers = await User.where({ username: username });
     if (existingUsers.length > 0) {
       throw Error("Too Late to the party, someone already chose that name.");
     }
     let passwordDigest = await hash(password, 11);
-    return User.create({ username, passwordDigest });
+    const newUser = await User.create({ username, passwordDigest });
+    session.loggedInUserId = newUser.id;
+    return newUser;
   }
 
   @session
