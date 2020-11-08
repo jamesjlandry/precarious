@@ -32,7 +32,9 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
     let userGamePlayers = userPlayers.filter((up) => up.gameId === gameId);
     userGamePlayers.forEach((ugp) => ugp.delete());
   };
-
+  if (activePlayerGame !== undefined && activePlayerGame.currentRound === 1) {
+    return redirect(`/play/${activePlayerGame.id}`)
+  }
   if (activePlayerGame !== undefined) {
     let gamePlayers = yield Player.where({ gameId: activePlayerGame.id });
     let [judgePlayer] = gamePlayers.filter((p) => p.isJudge);
@@ -76,4 +78,5 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
       </Container>
     );
   }
+  
 });
