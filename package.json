@@ -4,7 +4,8 @@
     "start": "triframe start"
   },
   "dependencies": {
-    "@triframe/arbiter": "^0.5.0",
+    "@triframe/arbiter": "^0.5.1",
+    "@triframe/arbiter-react": "^0.4.5",
     "@triframe/core": "^0.2.4",
     "@triframe/scribe": "^0.2.7",
     "bcrypt": "^5.0.0",

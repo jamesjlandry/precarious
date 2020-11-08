@@ -10,7 +10,7 @@ import {
   Button,
 } from "@triframe/designer";
 
-export const CreateUser = tether(function* ({ Api }) {
+export const CreateUser = tether(function* ({ Api, createUser }) {
   const { User } = Api;
   const form = yield { username: "", password: "", errorMsg: null };
 
