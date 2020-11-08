@@ -52,7 +52,7 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
         </Section>
         <Section>
           <Button
-            onClick={() => {
+            onPress={() => {
               user.isAvailable = false;
               declineInvite(user.id, activePlayerGame.id);
               redirect(`/view-user/${user.id}`);
@@ -75,6 +75,14 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
           <Heading>Waiting for an invitation</Heading>
           <Subheading>Patience is a virtue, {user?.username}</Subheading>
         </Section>
+        <Button
+          onPress={() => {
+            user.isAvailable = false;
+            redirect(`/view-user/${user?.id}`);
+          }}
+        >
+          I'm not that patient.
+        </Button>
       </Container>
     );
   }

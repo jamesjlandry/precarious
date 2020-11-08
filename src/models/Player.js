@@ -1,41 +1,69 @@
-import { Resource } from '@triframe/core'
-import { include, Model, boolean, integer, belongsTo,} from '@triframe/scribe'
-import { Game } from './Game'
+import { Resource } from "@triframe/core";
+import {
+  include,
+  Model,
+  boolean,
+  integer,
+  belongsTo,
+  sql,
+} from "@triframe/scribe";
+import { session, stream } from "@triframe/scribe/dist/decorators";
+import { Game } from "./Game";
+import { User } from "./User";
 
 export class Player extends Resource {
-    @include(Model)
+  @include(Model)
+  @belongsTo
+  user;
 
-    @belongsTo
-    user
+  @belongsTo
+  game;
 
-    @belongsTo
-    game
+  @integer
+  score = 0;
 
-    @integer
-    score = 0
+  @boolean
+  buzzerIsEnabled = false;
 
-    @boolean
-    buzzerIsEnabled = false
+  @boolean
+  isJudge = false;
 
-    @boolean
-    isJudge = false
-   
-    
-    async buzzIn(currentGameId) {
-        
-        if(this.buzzerIsEnabled === true) {
-            const players = await Player.where({game_id: currentGameId})
+  async buzzIn(currentGameId) {
+    if (this.buzzerIsEnabled === true) {
+      const players = await Player.where({ game_id: currentGameId });
 
-            players = players.map(player => player.buzzerIsEnabled = false)
+      players = players.map((player) => (player.buzzerIsEnabled = false));
 
-            const game = await Game.read(currentGameId)
+      const game = await Game.read(currentGameId);
 
-            game.buzzedInPlayerId = this.id
+      game.buzzedInPlayerId = this.id;
 
-            return ( players )
-        }
-
+      return players;
     }
+  }
 
-
+  @session
+  @stream
+  static *current(session) {
+    if (session !== undefined && session.loggedInUser !== null) {
+      let [player] = yield sql`
+            SELECT {
+                players {
+                    *,
+                    user {
+                        *
+                    },
+                    game {
+                        *
+                    }
+                }
+            }
+            WHERE players.userId  = ${session.loggedInUserId}
+                AND
+            game.isActive = true
+        `;
+      return player;
+    }
+    return null;
+  }
 }

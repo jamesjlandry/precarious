@@ -36,6 +36,12 @@ export class Game extends Resource {
   @hasMany({ through: (game) => game.players.user })
   users;
 
+  async getJudge() {
+    const players = await Player.where({ gameId: this.id });
+    const [judgePlayer] = players.filter((p) => p.isJudge);
+    return await User.read(judgePlayer.userId);
+  }
+
   static async createGame(currentUserId, name, rounds) {
     const newGame = await Game.create({
       name: name,
