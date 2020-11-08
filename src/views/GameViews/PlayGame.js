@@ -20,28 +20,38 @@ export const PlayGame = tether(function* ({ Api, redirect }) {
   const buttonStyle = {
     active: {backgroundColor:"green", borderRadius:"15px"},
     inactive: {backgroundColor:"rgb(230,230,230)", borderRadius:"15px"},
+    buzzer: {minHeight: "25vh", backgroundColor:"red", borderRadius:"50px"}
   }
   const currentUser = yield User.current();
+  const answering = false;
 
-
-    /**
-     * create components
-     */
-
-    // const playerCard = {};
   return (
     <Container>
+        <Area>
+        <Heading>round: {Game.currentRound ? Game.currentRound : '-'}/{Game.rounds ? Game.rounds : '-'} </Heading>
+        </Area>
         <Area alignX="right" style={{padding: '10px'}} >
             <Card style={cardStyle}>
             <Heading><b>Players</b></Heading>
-            
-            <Section>
+                <Section>{Game.players ? Game.players.map((player) => 
+                    <Card>
+                        {player.name} : {player.score}
+                    </Card>
+                ) : null}
 
-             player here
-            
-            </Section>
+                </Section>
             </Card>
         </Area>
+        <Area alignY="bottom">
+        <Card style={cardStyle}>
+            <Heading><b>Player Window</b></Heading>
+                <Button style={buttonStyle.buzzer} onClick={()=> {
+                    console.log("buzz in!")
+                    /*currentPlayer.buzzIn*/
+                    }}>Buzzer</Button>
+            </Card>
+        </Area>
+
     </Container>
   );
 });
