@@ -35,7 +35,9 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
     points: 0,
     currentGameId: null,
   }
-console.log(currentGame)
+  if(currentGame.currentRound > currentGame.rounds) {
+    redirect(`/game-over/${id}`)
+  }
 
   return (
     <Container>
