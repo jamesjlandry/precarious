@@ -10,6 +10,7 @@ import {
   Area,
   Card,
   Paragraph,
+  Grid,
 } from "@triframe/designer";
 
 export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
@@ -22,6 +23,11 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
     borderRadius: "15px",
     backgroundColor: "rgb(245,245,245)",
   };
+
+  const scoreCardStyle = {
+    border: "1px solid gray",
+  };
+
   const buttonStyle = {
     active: { backgroundColor: "green", borderRadius: "15px" },
     inactive: { backgroundColor: "rgb(230,230,230)", borderRadius: "15px" },
@@ -33,6 +39,26 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
     },
   };
 
+  const paragraphStyle = {
+    color: "inherit",
+    textAlign: "center",
+    margin: ".5em",
+  };
+
+  const buzzedInStyle = {
+    color: "white",
+    backgroundColor: "green",
+    width: "25%",
+    margin: "0.5em",
+  };
+
+  const notBuzzedInStyle = {
+    color: "black",
+    backgroundColor: "lightgrey",
+    width: "25%",
+    margin: "0.5em",
+  };
+
   const [currentGame] = yield Game.where({ id: id }, `*, players {*}`);
   const currentPlayer = yield Player.current();
 
@@ -42,11 +68,9 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
   );
   const form = yield {
     pointWinnerId: null,
-    points: 0,
+    points: null,
     currentGameId: null,
   };
-  console.log("currentGame:", currentGame);
-  console.log("currentGame.buzzedInPlayerId:", currentGame.buzzedInPlayerId);
 
   return (
     <Container>
@@ -63,9 +87,9 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
           </Heading>
           <Area>
             {players.map((player) => (
-              <Card key={player.id}>
-                <Paragraph>
-                  {player?.user?.username} : {player.score}
+              <Card style={scoreCardStyle} key={player.id}>
+                <Paragraph style={paragraphStyle}>
+                  {player?.user?.username.toUpperCase()} : {player.score}
                 </Paragraph>
               </Card>
             ))}
@@ -75,20 +99,22 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
       <Area alignY="bottom">
         {currentPlayer.isJudge ? (
           <Section>
-            <Area>
+            <Grid base={4} gutter={10} style={{ height: "20%" }}>
               {players.map((player) => (
                 <Card
                   key={player.id}
                   style={
                     currentGame.buzzedInPlayerId === player.id
-                      ? { color: "white", backgroundColor: "green" }
-                      : { color: "black", backgroundColor: "light grey" }
+                      ? buzzedInStyle
+                      : notBuzzedInStyle
                   }
                 >
-                  <Paragraph>{player.user.username}</Paragraph>
+                  <Paragraph style={paragraphStyle}>
+                    {player.user.username.toUpperCase()}
+                  </Paragraph>
                 </Card>
               ))}
-            </Area>
+            </Grid>
             <Section>
               <TextInput
                 label="Points"
@@ -98,12 +124,11 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
               <Button
                 disabled={currentGame.buzzedInPlayerId === null}
                 onPress={() => {
-                  console.log(currentGame.buzzedInPlayerId),
-                    Game.assignPoints(
-                      currentGame.buzzedInPlayerId,
-                      form.points,
-                      id
-                    );
+                  Game.assignPoints(
+                    currentGame.buzzedInPlayerId,
+                    form.points,
+                    id
+                  );
                 }}
               >
                 Make it So
@@ -120,9 +145,6 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
           </Section>
         ) : (
           <Card style={cardStyle}>
-            <Heading>
-              <b>Player Window</b>
-            </Heading>
             <Button
               disabled={!currentPlayer.buzzerIsEnabled}
               style={
@@ -131,16 +153,10 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
                   : buttonStyle.inactiveBuzzer
               }
               onPress={() => {
-                console.log(
-                  "buzz in! currentPlay:id",
-                  currentPlayer.user.username,
-                  ":",
-                  id
-                );
                 return currentPlayer.buzzIn(id);
               }}
             >
-              Buzzer
+              I KNOW THIS!
             </Button>
           </Card>
         )}
