@@ -6,6 +6,7 @@ import {
   integer,
   belongsTo,
   sql,
+  hidden,
 } from "@triframe/scribe";
 import { session, stream } from "@triframe/scribe/dist/decorators";
 import { Game } from "./Game";
@@ -28,9 +29,12 @@ export class Player extends Resource {
   @boolean
   isJudge = false;
 
+  @hidden
+  delete;
+
   async buzzIn(currentGameId) {
     if (this.buzzerIsEnabled === true) {
-      const players = await Player.where({ game_id: currentGameId });
+      let players = await Player.where({ game_id: currentGameId });
 
       players = players.map((player) => (player.buzzerIsEnabled = false));
 
