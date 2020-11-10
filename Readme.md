@@ -1,17 +1,7 @@
-A super fun game of with precarious results. 
+# PRECARIOUS!
 
-Users can play as a Judge or a Player in a game of trivia.
+## A super fun game of with precarious results!
 
-Players want to be the fastest to buzz in to answer the question. 
+Be a player, and buzz in with the right answer first! Or, be a judge and ask the questions and score the answers. Highest score wins!
 
-Judges determine correct answers, award points, and laugh at wrong answers. 
-
-
-User Story:
-
-MVP
-
-Models:
-Users
-Games
-Players (join model)
+[Currently deployed on heroku](https://dry-depths-01460.herokuapp.com/).
