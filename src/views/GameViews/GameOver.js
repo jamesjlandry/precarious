@@ -8,7 +8,7 @@ import {
     Card
 } from "@triframe/designer"
 
-export const GameOver = tether(function* ({ Api, redirect, useParams }) {
+export const GameOver = tether(function* ({ Api, redirect, useParams, afterFirstRender }) {
 
     const { Game, User, Player } = Api
     const currentUser = yield User.current()
@@ -20,9 +20,10 @@ export const GameOver = tether(function* ({ Api, redirect, useParams }) {
         return filteredPlayers.sort((a, b) => b.score - a.score);
       }
     const players = declareWinner()
-
+    
+    afterFirstRender(() => { game.isActive = false})
     const [winner] = players
-
+    
 
     return (
 

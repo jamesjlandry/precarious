@@ -107,6 +107,8 @@ export class Game extends Resource {
     );
   }
 
+  
+
   static async invitePlayers(currentGameId, userId) {
     const player = await Player.create({
       isJudge: false,

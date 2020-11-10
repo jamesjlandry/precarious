@@ -19,7 +19,7 @@ import { AllGames } from "./views/GameViews/AllGames";
 
 
 export default () => (
-  <Provider url={process.env.NODE_ENV === 'staging' ? "http://localhost:8080" : undefined}>
+  <Provider url={process.env.NODE_ENV === 'development' ? "http://localhost:8080" : undefined}>
     <Route exact path="/" component={MainPage} />
     <Route exact path="/login" component={LoginUser} />
     <Route exact path="/create-user" component={CreateUser} />
