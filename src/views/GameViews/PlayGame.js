@@ -29,7 +29,17 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams, afterFirst
   let showQuestion = async () => {
     let number = Math.floor(Math.random() * Math.floor(49))
     questionsObj.question = await questionsObj.questions.currentValue[number]
-    console.log(questionsObj.question)
+    let points
+    if (questionsObj.question.difficulty === "easy") {
+      points = 10
+    }
+    if (questionsObj.question.difficulty === "medium") {
+      points = 20
+    } 
+    if (questionsObj.question.difficulty === "hard") {
+      points = 30
+    }
+    form.points = points
   }
 
 
