@@ -169,7 +169,7 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams, afterFirst
                     currentGame.buzzedInPlayerId,
                     form.points,
                     id
-                  );
+                  ); questionsObj.question = null
                 }}
               >
                 Make it So
