@@ -11,11 +11,27 @@ import {
   Card,
   Paragraph,
   Grid,
+  BubbleButton,
+  Text
 } from "@triframe/designer";
 
-export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
+export const PlayGame = tether(function* ({ Api, redirect, useParams, afterFirstRender }) {
   const { Game, Player } = Api;
   const { id } = yield useParams();
+  
+  const questionsObj = yield {
+      questions: [],
+      question: null
+  }
+
+  afterFirstRender(() => { questionsObj.questions = currentGame.getQuestions(50)})
+
+  let showQuestion = async () => {
+    let number = Math.floor(Math.random() * Math.floor(49))
+    questionsObj.question = await questionsObj.questions.currentValue[number]
+    console.log(questionsObj.question)
+  }
+
 
   const cardStyle = {
     padding: "10px",
@@ -102,6 +118,18 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
       <Area alignY="bottom">
         {currentPlayer.isJudge ? (
           <Section>
+            <BubbleButton onPress={ () => showQuestion()}>
+               Get Question
+            </BubbleButton>
+            {questionsObj.question ? 
+            <Card>
+              <Paragraph>Category: {questionsObj.question.category}</Paragraph>
+              <Text>Question: {questionsObj.question.question} </Text>
+              <Paragraph>Difficulty: {questionsObj.question.difficulty}</Paragraph>
+              <Paragraph>Correct Answer: {questionsObj.question.correct_answer}</Paragraph>
+            </Card>
+            :
+            null}
             <Grid base={4} gutter={10} style={{ height: "20%" }}>
               {players.map((player) => (
                 <Card
@@ -147,6 +175,14 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
             </Section>
           </Section>
         ) : (
+          <Area>
+          <Card style={cardStyle}>
+            {/* <Button onPress={() => {
+              return currentPlayer.delete()
+            }}>
+              Resign
+            </Button> */}
+          </Card>
           <Card style={cardStyle}>
             <Button
               disabled={!currentPlayer.buzzerIsEnabled}
@@ -162,6 +198,7 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams }) {
               I KNOW THIS!
             </Button>
           </Card>
+          </Area>
         )}
       </Area>
     </Container>
