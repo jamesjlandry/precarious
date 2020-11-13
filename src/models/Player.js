@@ -7,6 +7,7 @@ import {
   belongsTo,
   sql,
   hidden,
+  hiddenUnless
 } from "@triframe/scribe";
 import { session, stream } from "@triframe/scribe/dist/decorators";
 import { Game } from "./Game";
@@ -45,6 +46,11 @@ export class Player extends Resource {
       return players;
     }
   }
+
+  @hiddenUnless(({session, resource}) => session.loggedInUserId === resource.userId)
+  async  decline () {
+    this.delete()
+  };
 
   @session
   @stream

@@ -18,13 +18,15 @@ import {
 export const PlayGame = tether(function* ({ Api, redirect, useParams, afterFirstRender }) {
   const { Game, Player } = Api;
   const { id } = yield useParams();
-  
+
   const questionsObj = yield {
-      questions: [],
-      question: null
+    questions: [],
+    question: null
   }
 
-  afterFirstRender(() => { questionsObj.questions = currentGame.getQuestions(50)})
+
+
+  afterFirstRender(() => { questionsObj.questions = currentGame.getQuestions(50) })
 
   let showQuestion = async () => {
     let number = Math.floor(Math.random() * Math.floor(49))
@@ -35,7 +37,7 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams, afterFirst
     }
     if (questionsObj.question.difficulty === "medium") {
       points = 20
-    } 
+    }
     if (questionsObj.question.difficulty === "hard") {
       points = 30
     }
@@ -97,7 +99,7 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams, afterFirst
     points: null,
     currentGameId: null,
   }
-  if(currentGame.currentRound > currentGame.rounds) {
+  if (currentGame.currentRound > currentGame.rounds) {
     redirect(`/game-over/${id}`)
   }
 
@@ -128,18 +130,19 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams, afterFirst
       <Area alignY="bottom">
         {currentPlayer.isJudge ? (
           <Section>
-            <BubbleButton onPress={ () => showQuestion()}>
-               Get Question
-            </BubbleButton>
-            {questionsObj.question ? 
-            <Card>
-              <Paragraph>Category: {questionsObj.question.category}</Paragraph>
-              <Text>Question: {questionsObj.question.question} </Text>
-              <Paragraph>Difficulty: {questionsObj.question.difficulty}</Paragraph>
-              <Paragraph>Correct Answer: {questionsObj.question.correct_answer}</Paragraph>
-            </Card>
-            :
-            null}
+            <Area inline alignY='center' ><BubbleButton icon="plus" onPress={() => showQuestion()} />
+              <Area alignY='center'>Get Question
+            </Area>
+            </Area>
+            {questionsObj.question ?
+              <Card>
+                <Paragraph>Category: {questionsObj.question.category}</Paragraph>
+                <Text>Question: {questionsObj.question.question} </Text>
+                <Paragraph>Difficulty: {questionsObj.question.difficulty}</Paragraph>
+                <Paragraph>Correct Answer: {questionsObj.question.correct_answer}</Paragraph>
+              </Card>
+              :
+              null}
             <Grid base={4} gutter={10} style={{ height: "20%" }}>
               {players.map((player) => (
                 <Card
@@ -185,31 +188,31 @@ export const PlayGame = tether(function* ({ Api, redirect, useParams, afterFirst
             </Section>
           </Section>
         ) : (
-          <Area>
-          <Card style={cardStyle}>
-            {/* <Button onPress={() => {
+            <Area>
+              <Card style={cardStyle}>
+                {/* <Button onPress={() => {
               return currentPlayer.delete()
             }}>
               Resign
             </Button> */}
-          </Card>
-          <Card style={cardStyle}>
-            <Button
-              disabled={!currentPlayer.buzzerIsEnabled}
-              style={
-                currentPlayer.buzzerIsEnabled
-                  ? buttonStyle.buzzer
-                  : buttonStyle.inactiveBuzzer
-              }
-              onPress={() => {
-                return currentPlayer.buzzIn(id);
-              }}
-            >
-              I KNOW THIS!
+              </Card>
+              <Card style={cardStyle}>
+                <Button
+                  disabled={!currentPlayer.buzzerIsEnabled}
+                  style={
+                    currentPlayer.buzzerIsEnabled
+                      ? buttonStyle.buzzer
+                      : buttonStyle.inactiveBuzzer
+                  }
+                  onPress={() => {
+                    return currentPlayer.buzzIn(id);
+                  }}
+                >
+                  I KNOW THIS!
             </Button>
-          </Card>
-          </Area>
-        )}
+              </Card>
+            </Area>
+          )}
       </Area>
     </Container>
   );

@@ -44,7 +44,6 @@ export const CreateGame = tether(function* ({ Api, redirect }) {
           <Button style={buttonStyle.active}
             onPress={async () => {
               const game = await Game.createGame(
-                currentUser.id,
                 form.name,
                 form.rounds
               );
