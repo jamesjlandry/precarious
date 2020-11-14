@@ -34,20 +34,10 @@ export const JoinGame = tether(function* ({ Api, redirect, useParams }) {
   if (id !== undefined && id !== "waiting-room") {
     let game = yield Game.read(id, `*, players {*}`);
     let players = game.players;
-    let userPlayers = players.filter((player) => {
-      player.userId === user.id;
-    });
-    console.log(
-      "\ngame:",
-      game,
-      "\nplayers:",
-      game.players,
-      "\nplayer user ids:",
-      game.players.map((player) => player.userId)
-    );
+    let userPlayers = players.filter((player) => player.userId === user.id);
+
     if (userPlayers.length === 0) {
-      console.log("userplayers.length === 0");
-      // currentPlayer = yield Game.invitePlayers(id, user.id);
+      currentPlayer = yield Game.invitePlayers(id, user.id);
     } else if (userPlayers.length === 1) {
       currentPlayer = userPlayers[0];
     } else {

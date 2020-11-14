@@ -40,7 +40,7 @@ export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
           <Subheading>Invite players:</Subheading>
           <TextInput
             label="link"
-            value={`${Api.url}/join-game/${id}`}
+            value={`${window.location.host}/join-game/${id}`}
             mode="outlined"
           />
         </Area>
