@@ -1,5 +1,5 @@
 import React from "react";
-import { Provider, Route, Redirect } from "@triframe/designer";
+import { Provider, Route } from "@triframe/designer";
 import { CreateUser } from "./views/UserViews/CreateUser";
 import { MainPage } from "./views/MainPage";
 import { LoginUser } from "./views/UserViews/LoginUser";
@@ -17,17 +17,21 @@ import { AllGames } from "./views/GameViews/AllGames";
 // git push heroku precarious:main
 // git checkout main
 
-
 export default () => (
-  <Provider url={process.env.NODE_ENV === 'development' ? "http://localhost:8080" : undefined}>
+  <Provider
+    url={
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:8080"
+        : undefined
+    }
+  >
     <Route exact path="/" component={MainPage} />
     <Route exact path="/login" component={LoginUser} />
     <Route exact path="/create-user" component={CreateUser} />
     <Route exact path="/view-user/:id" component={ViewUser} />
     <Route exact path="/view-user" component={AllUsers} />
     <Route exact path="/create-game" component={CreateGame} />
-    <Route exact path="/join-game" component={JoinGame} />
-    {/* <Route exact path="/join-game/:id" component={JoinGame} /> */}
+    <Route exact path="/join-game/:id" component={JoinGame} />
     <Route exact path="/setup-game/:id" component={SetupGame} />
     <Route exact path="/play/:id" component={PlayGame} />
     <Route exact path="/game-over/:id" component={GameOver} />

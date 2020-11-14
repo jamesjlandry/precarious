@@ -13,7 +13,6 @@ import { isNullOrEmpty } from "../../HelperFunctions";
 export const JoinGame = tether(function* ({ Api, redirect, useParams }) {
   const { User, Game, Player } = Api;
   const { id } = yield useParams();
-  console.log("id:", id);
 
   let user = yield User.current();
   if (user === null) {
@@ -35,10 +34,12 @@ export const JoinGame = tether(function* ({ Api, redirect, useParams }) {
     return redirect(`/play/${activePlayerGame.id}`);
   }
   if (activePlayerGame !== undefined) {
-    console.log("activePlayerGame.name", activePlayerGame.name);
     let gamePlayers = yield Player.where({ gameId: activePlayerGame.id });
     let [judgePlayer] = gamePlayers.filter((p) => p.isJudge);
     let judge = yield User.read(judgePlayer.userId);
+    if (id === "waiting-room") {
+      redirect(`/join-game/${activePlayerGame.id}`);
+    }
 
     return (
       <Container>
