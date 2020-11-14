@@ -9,8 +9,10 @@ import {
   Section,
   tether,
   Icon,
+  Subheading,
 } from "@triframe/designer";
 import React from "react";
+import { TextInput } from "react-native-gesture-handler";
 
 export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
   const { id } = yield useParams();
@@ -34,21 +36,32 @@ export const SetupGame = tether(function* ({ Api, useParams, redirect }) {
         Select players for {game.name == "" || null ? "your game" : game.name}
       </Heading>
       <Section width="50%">
-        {availableUsers.length > 0 ? (
-          availableUsers.map((user) => (
-            <Area inline key={user.id}>
-              <BubbleButton
-                icon="plus"
-                onPress={() => Game.invitePlayers(id, user.id)}
-              />
-              <Area alignY="center">
-                <List.Item title={user.username} />
+        <Area>
+          <Subheading>Invite players:</Subheading>
+          <TextInput
+            label="link"
+            value={`${window.location.host}/join-game/${id}`}
+            mode="outlined"
+          />
+        </Area>
+        <Area>
+          <Subheading>Available users:</Subheading>
+          {availableUsers.length > 0 ? (
+            availableUsers.map((user) => (
+              <Area inline key={user.id}>
+                <BubbleButton
+                  icon="plus"
+                  onPress={() => Game.invitePlayers(id, user.id)}
+                />
+                <Area alignY="center">
+                  <List.Item title={user.username} />
+                </Area>
               </Area>
-            </Area>
-          ))
-        ) : (
-          <Area>Waiting for available players...</Area>
-        )}
+            ))
+          ) : (
+            <Area>Waiting for available players...</Area>
+          )}
+        </Area>
       </Section>
       <Button
         disabled={notEnoughPlayers}

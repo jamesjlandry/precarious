@@ -9,6 +9,11 @@ import {
 } from "@triframe/designer";
 
 export const MainPage = tether(function* ({ Api, redirect }) {
+  let user = yield Api.User.current();
+  if (user !== null) {
+    redirect(`/view-user/${user.id}`);
+  }
+
   return (
     <Container>
       <Heading>PRECARIOUS!!!</Heading>

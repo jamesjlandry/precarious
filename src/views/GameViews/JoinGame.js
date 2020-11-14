@@ -8,9 +8,11 @@ import {
   tether,
 } from "@triframe/designer";
 import React from "react";
+import { isNullOrEmpty } from "../../HelperFunctions";
 
-export const JoinGame = tether(function* ({ Api, redirect }) {
+export const JoinGame = tether(function* ({ Api, redirect, useParams }) {
   const { User, Game, Player } = Api;
+  const { id } = yield useParams();
 
   let user = yield User.current();
   if (user === null) {
@@ -24,25 +26,46 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
     playerGameIds.includes(ag.id)
   );
 
-  let [currentPlayer] = userPlayers.filter(player => player.gameId === activePlayerGame?.id)
-  
+  let [currentPlayer] = userPlayers.filter(
+    (player) => player.gameId === activePlayerGame?.id
+  );
 
-  
+  // if a user comes to this via a link, and they're not a player in the game yet, create the player
+  if (id !== undefined && id !== "waiting-room") {
+    let game = yield Game.read(id, `*, players {*}`);
+    let players = game.players;
+    let userPlayers = players.filter((player) => player.userId === user.id);
 
- 
+    if (userPlayers.length === 0) {
+      currentPlayer = yield Game.invitePlayers(id, user.id);
+    } else if (userPlayers.length === 1) {
+      currentPlayer = userPlayers[0];
+    } else {
+      throw Error("How did you get into the same game twice?!");
+    }
+  }
+
+  // the game has started when
   if (activePlayerGame !== undefined && activePlayerGame.currentRound === 1) {
-    return redirect(`/play/${activePlayerGame.id}`)
+    return redirect(`/play/${activePlayerGame.id}`);
   }
   if (activePlayerGame !== undefined) {
     let gamePlayers = yield Player.where({ gameId: activePlayerGame.id });
     let [judgePlayer] = gamePlayers.filter((p) => p.isJudge);
     let judge = yield User.read(judgePlayer.userId);
+    if (id === "waiting-room") {
+      redirect(`/join-game/${activePlayerGame.id}`);
+    }
 
     return (
       <Container>
         <Section>
           <Heading>
-            You're invited to {activePlayerGame.name ?? "a new game"}!
+            You're invited to{" "}
+            {isNullOrEmpty(activePlayerGame.name)
+              ? "a new game"
+              : activePlayerGame.name}
+            !
           </Heading>
           <Subheading>
             {`${judge?.username} will be judge for this game.`}
@@ -84,5 +107,4 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
       </Container>
     );
   }
-  
 });

@@ -48,7 +48,7 @@ export const ViewUser = tether(function* ({ Api, redirect, useParams }) {
               <Button
                 onClick={() => {
                   user.isAvailable = true;
-                  redirect("/join-game");
+                  redirect("/join-game/waiting-room");
                 }}
               >
                 Join A Game
