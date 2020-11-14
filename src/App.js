@@ -8,7 +8,7 @@ import { CreateGame } from "./views/GameViews/CreateGame";
 import { JoinGame } from "./views/GameViews/JoinGame";
 import { SetupGame } from "./views/GameViews/SetupGame";
 import { PlayGame } from "./views/GameViews/PlayGame";
-import { GameOver } from "./views/GameViews/GameOver"
+import { GameOver } from "./views/GameViews/GameOver";
 import { AllUsers } from "./views/UserViews/AllUsers";
 import { AllGames } from "./views/GameViews/AllGames";
 // npx triframe deploy precarious (after a while this will fail)
@@ -26,6 +26,7 @@ export default () => (
     <Route exact path="/view-user" component={AllUsers} />
     <Route exact path="/create-game" component={CreateGame} />
     <Route exact path="/join-game" component={JoinGame} />
+    {/* <Route exact path="/join-game/:id" component={JoinGame} /> */}
     <Route exact path="/setup-game/:id" component={SetupGame} />
     <Route exact path="/play/:id" component={PlayGame} />
     <Route exact path="/game-over/:id" component={GameOver} />

@@ -8,9 +8,12 @@ import {
   tether,
 } from "@triframe/designer";
 import React from "react";
+import { isNullOrEmpty } from "../../HelperFunctions";
 
-export const JoinGame = tether(function* ({ Api, redirect }) {
+export const JoinGame = tether(function* ({ Api, redirect, useParams }) {
   const { User, Game, Player } = Api;
+  const { id } = yield useParams();
+  console.log("id:", id);
 
   let user = yield User.current();
   if (user === null) {
@@ -23,9 +26,6 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
   let [activePlayerGame] = activeGames.filter((ag) =>
     playerGameIds.includes(ag.id)
   );
-  
-
-  
 
   const declineInvite = async (userId, gameId) => {
     const userPlayers = await Player.where({ userId });
@@ -33,9 +33,10 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
     userGamePlayers.forEach((ugp) => ugp.delete());
   };
   if (activePlayerGame !== undefined && activePlayerGame.currentRound === 1) {
-    return redirect(`/play/${activePlayerGame.id}`)
+    return redirect(`/play/${activePlayerGame.id}`);
   }
   if (activePlayerGame !== undefined) {
+    console.log("activePlayerGame.name", activePlayerGame.name);
     let gamePlayers = yield Player.where({ gameId: activePlayerGame.id });
     let [judgePlayer] = gamePlayers.filter((p) => p.isJudge);
     let judge = yield User.read(judgePlayer.userId);
@@ -44,7 +45,11 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
       <Container>
         <Section>
           <Heading>
-            You're invited to {activePlayerGame.name ?? "a new game"}!
+            You're invited to{" "}
+            {isNullOrEmpty(activePlayerGame.name)
+              ? "a new game"
+              : activePlayerGame.name}
+            !
           </Heading>
           <Subheading>
             {`${judge?.username} will be judge for this game.`}
@@ -86,5 +91,4 @@ export const JoinGame = tether(function* ({ Api, redirect }) {
       </Container>
     );
   }
-  
 });
