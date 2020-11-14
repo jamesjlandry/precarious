@@ -8,7 +8,7 @@ import {
   integer,
   Model,
   string,
-  session
+  session,
 } from "@triframe/scribe";
 import fetch from "node-fetch";
 import { Player } from "./Player";
@@ -109,8 +109,6 @@ export class Game extends Resource {
     );
   }
 
-  
-
   static async invitePlayers(currentGameId, userId) {
     const player = await Player.create({
       isJudge: false,
@@ -143,7 +141,7 @@ export class Game extends Resource {
     return players;
   }
 
-  static async dissableBuzzer(currentGameId) {
+  static async disableBuzzer(currentGameId) {
     let players = await Player.where({ gameId: currentGameId });
     players = players.map((player) => (player.buzzerIsEnabled = false));
     return players;
@@ -161,5 +159,4 @@ export class Game extends Resource {
 
   // frontend method should check for if currentGame.currentRound > currentGame.rounds and
   // run declareWinner on that condition.
-  
 }
