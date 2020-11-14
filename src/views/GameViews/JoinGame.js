@@ -27,11 +27,10 @@ export const JoinGame = tether(function* ({ Api, redirect, useParams }) {
     playerGameIds.includes(ag.id)
   );
 
-  const declineInvite = async (userId, gameId) => {
-    const userPlayers = await Player.where({ userId });
-    let userGamePlayers = userPlayers.filter((up) => up.gameId === gameId);
-    userGamePlayers.forEach((ugp) => ugp.delete());
-  };
+  let [currentPlayer] = userPlayers.filter(
+    (player) => player.gameId === activePlayerGame?.id
+  );
+
   if (activePlayerGame !== undefined && activePlayerGame.currentRound === 1) {
     return redirect(`/play/${activePlayerGame.id}`);
   }
@@ -59,7 +58,7 @@ export const JoinGame = tether(function* ({ Api, redirect, useParams }) {
           <Button
             onPress={() => {
               user.isAvailable = false;
-              declineInvite(user.id, activePlayerGame.id);
+              currentPlayer.decline();
               redirect(`/view-user/${user.id}`);
             }}
           >

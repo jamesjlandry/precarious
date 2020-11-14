@@ -11,7 +11,7 @@ import {
 export const MainPage = tether(function* ({ Api, redirect }) {
   return (
     <Container>
-      <Heading>PRECARIOUS!</Heading>
+      <Heading>PRECARIOUS!!!</Heading>
 
       <Subheading>Login or Create User</Subheading>
       <Section>

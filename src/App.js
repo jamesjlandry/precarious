@@ -17,8 +17,9 @@ import { AllGames } from "./views/GameViews/AllGames";
 // git push heroku precarious:main
 // git checkout main
 
+
 export default () => (
-  <Provider url="http://localhost:8080">
+  <Provider url={process.env.NODE_ENV === 'development' ? "http://localhost:8080" : undefined}>
     <Route exact path="/" component={MainPage} />
     <Route exact path="/login" component={LoginUser} />
     <Route exact path="/create-user" component={CreateUser} />

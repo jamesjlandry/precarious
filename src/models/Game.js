@@ -8,6 +8,7 @@ import {
   integer,
   Model,
   string,
+  session
 } from "@triframe/scribe";
 import fetch from "node-fetch";
 import { Player } from "./Player";
@@ -83,7 +84,8 @@ export class Game extends Resource {
     return await User.read(judgePlayer.userId);
   }
 
-  static async createGame(currentUserId, name, rounds) {
+  @session
+  static async createGame({ loggedInUserId }, name, rounds) {
     const newGame = await Game.create({
       name: name,
       rounds: rounds,
@@ -91,7 +93,7 @@ export class Game extends Resource {
       currentRound: 0,
     });
     await Player.create({
-      userId: currentUserId,
+      userId: loggedInUserId,
       isJudge: true,
       gameId: newGame.id,
     });
@@ -106,6 +108,8 @@ export class Game extends Resource {
             `
     );
   }
+
+  
 
   static async invitePlayers(currentGameId, userId) {
     const player = await Player.create({

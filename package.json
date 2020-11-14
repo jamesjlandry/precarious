@@ -28,7 +28,7 @@
     "@babel/core": "~7.9.0",
     "@triframe/confectioner": "0.0.3",
     "@triframe/designer": "^0.6.1",
-    "@triframe/mason": "^0.2.3",
+    "@triframe/mason": "^0.2.4",
     "babel-jest": "~25.2.6",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "babel-preset-triframe": "0.0.5",
