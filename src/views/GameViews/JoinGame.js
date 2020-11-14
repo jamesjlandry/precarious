@@ -30,6 +30,32 @@ export const JoinGame = tether(function* ({ Api, redirect, useParams }) {
     (player) => player.gameId === activePlayerGame?.id
   );
 
+  // if a user comes to this via a link, and they're not a player in the game yet, create the player
+  if (id !== undefined && id !== "waiting-room") {
+    let game = yield Game.read(id, `*, players {*}`);
+    let players = game.players;
+    let userPlayers = players.filter((player) => {
+      player.userId === user.id;
+    });
+    console.log(
+      "\ngame:",
+      game,
+      "\nplayers:",
+      game.players,
+      "\nplayer user ids:",
+      game.players.map((player) => player.userId)
+    );
+    if (userPlayers.length === 0) {
+      console.log("userplayers.length === 0");
+      // currentPlayer = yield Game.invitePlayers(id, user.id);
+    } else if (userPlayers.length === 1) {
+      currentPlayer = userPlayers[0];
+    } else {
+      throw Error("How did you get into the same game twice?!");
+    }
+  }
+
+  // the game has started when
   if (activePlayerGame !== undefined && activePlayerGame.currentRound === 1) {
     return redirect(`/play/${activePlayerGame.id}`);
   }
