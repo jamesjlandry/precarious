@@ -9,11 +9,12 @@ import {
   Subheading,
   tether,
 } from "@triframe/designer";
+import { tryParseInt } from "../../HelperFunctions";
 
 export const ViewUser = tether(function* ({ Api, redirect, useParams }) {
   const { id } = yield useParams();
 
-  if (id === null) {
+  if (tryParseInt(id, null) === null) {
     redirect("/login");
   } else {
     const { User } = Api;
