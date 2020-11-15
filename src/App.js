@@ -1,8 +1,8 @@
 import React from "react";
-import { Appbar, Provider, Route } from "@triframe/designer";
+import { Provider, Route } from "@triframe/designer";
 import { CreateUser } from "./views/UserViews/CreateUser";
 import { MainPage } from "./views/MainPage";
-import { TopBar } from "./views/TopBar";
+import { NavBar } from "./views/NavBar";
 import { LoginUser } from "./views/UserViews/LoginUser";
 import { ViewUser } from "./views/UserViews/ViewUser";
 import { CreateGame } from "./views/GameViews/CreateGame";
@@ -26,9 +26,7 @@ export default () => (
         : undefined
     }
   >
-    <Appbar>
-      <TopBar />
-    </Appbar>
+    <NavBar />
     <Route exact path="/" component={MainPage} />
     <Route exact path="/login" component={LoginUser} />
     <Route exact path="/create-user" component={CreateUser} />
