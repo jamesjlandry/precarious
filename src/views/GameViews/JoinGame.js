@@ -6,7 +6,9 @@ import {
   Section,
   Subheading,
   tether,
+  Snackbar,
 } from "@triframe/designer";
+
 import React from "react";
 import { isNullOrEmpty } from "../../HelperFunctions";
 
@@ -17,7 +19,8 @@ export const JoinGame = tether(function* ({ Api, redirect, useParams }) {
   
   let user = yield User.current();
   if (user === null) {
-    alert('You must be logged in to join a game')
+    alert('You must be logged in to join a game.')
+    // <Snackbar visible={true} duration={250}>You must be logged in to join a game.</Snackbar>
     redirect("/login");
   } else {
 
