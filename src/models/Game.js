@@ -2,6 +2,7 @@ import { Resource } from "@triframe/core";
 import {
   boolean,
   hasMany,
+  belongsTo,
   hidden,
   hiddenUnless,
   include,
@@ -30,6 +31,9 @@ export class Game extends Resource {
   @include(Model)
   @hasMany
   players = [];
+
+  @hasMany
+  chatBoxes;
 
   @string
   name = "";
