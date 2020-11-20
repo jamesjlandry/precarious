@@ -14,10 +14,12 @@ export const JoinGame = tether(function* ({ Api, redirect, useParams }) {
   const { User, Game, Player } = Api;
   const { id } = yield useParams();
 
+  
   let user = yield User.current();
   if (user === null) {
+    alert('You must be logged in to join a game')
     redirect("/login");
-  }
+  } else {
 
   let userPlayers = yield Player.where({ userId: user.id });
   let playerGameIds = userPlayers.map((player) => player.gameId);
@@ -107,4 +109,5 @@ export const JoinGame = tether(function* ({ Api, redirect, useParams }) {
       </Container>
     );
   }
+}
 });
