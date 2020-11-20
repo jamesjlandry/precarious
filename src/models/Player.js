@@ -1,6 +1,7 @@
 import { Resource } from "@triframe/core";
 import {
   include,
+  hasMany,
   Model,
   boolean,
   integer,
@@ -9,9 +10,8 @@ import {
   hidden,
   hiddenUnless
 } from "@triframe/scribe";
-import { session, stream } from "@triframe/scribe/dist/decorators";
+import {  session, stream } from "@triframe/scribe/dist/decorators";
 import { Game } from "./Game";
-import { User } from "./User";
 
 export class Player extends Resource {
   @include(Model)
@@ -20,6 +20,9 @@ export class Player extends Resource {
 
   @belongsTo
   game;
+
+  @hasMany
+  chatBoxes;
 
   @integer
   score = 0;
