@@ -223,6 +223,11 @@ export const PlayGame = tether(function* ({
             </Card>
           </Area>
         )}
+        <Area>
+              <TextInput>
+
+              </TextInput>   
+        </Area>
       </Area>
     </Container>
   );
