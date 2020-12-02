@@ -28,7 +28,7 @@ export class Chat extends Resource {
     @hidden
     delete;
 
-    static async newChat(currentGameId, currentPlayerId, chatMessage) {
+    static async newChatMessage(currentGameId, currentPlayerId, chatText) {
       const game = await Game.read(currentGameId);
 
       const player = await Player.read(currentPlayerId);
@@ -36,7 +36,7 @@ export class Chat extends Resource {
       const chatMessage = await Chat.create({
         playerId: currentPlayerId,
         gameId: currentGameId,
-        chatMessage: chatMessage
+        chatMessage: chatText
       })
       
       return Chat.read(
